@@ -1,30 +1,46 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { Button, TextInput } from 'react-native-paper';
+import { IconButton, TextInput } from 'react-native-paper';
 
 import useStorage from '../hooks/useStorage';
 import { TasksStackParams } from '../pages/navigation';
 import { globalStyles } from '../styles';
 
-export default function TaskDetails({ navigation }: NativeStackScreenProps<TasksStackParams>) {
+export default function TaskDetails({
+  route,
+  navigation,
+}: NativeStackScreenProps<TasksStackParams, 'TaskDetails'>) {
+  const { id } = route.params;
   const [task, setTask] = useState({
     name: 'Na',
     description: '',
   });
 
-  // hooks
+  const [getTasks] = useStorage('@tasks');
+
+  // Hooks
   useEffect(() => {
-    // Use `setOptions` to update the button that we previously specified
-    // Now the button includes an `onPress` handler to update the count
+    loadData();
+  }, []);
+
+  useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <Button icon="check" textColor="#fff" onPress={() => navigation.navigate('Tasks')}>
-          {' '}
-        </Button>
+        <IconButton icon="check" iconColor="#fff" onPress={() => navigation.navigate('Tasks')} />
       ),
     });
   }, [navigation]);
+
+  // Methods
+  const loadData = async () => {
+    const task = await getTasks();
+
+    setTask({
+      name: task.name,
+      description: task.description,
+    });
+  };
 
   return (
     <View style={globalStyles.pageWrapper}>
@@ -35,6 +51,7 @@ export default function TaskDetails({ navigation }: NativeStackScreenProps<Tasks
           value={task.name}
           style={styles.searchbar}
         />
+        <Text>{id}</Text>
       </View>
     </View>
   );
