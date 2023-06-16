@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -10,18 +10,25 @@ import {
 } from 'react-native';
 
 import Task from '../components/Task';
+import useStorage from '../hooks/useStorage';
+import { TaskType } from '../types';
 
 export default function Home() {
-  const [task, setTask] = useState('');
-  const [tasks, setTasks] = useState(['First task']);
+  const [newTask, setNewTask] = useState('');
+  const [userTasks, setUserTasks] = useState([]);
+  const [getUserTasks, postUserTasks] = useStorage('@user_tasks');
+
+  // Hooks
+  useEffect(() => {
+    loadData();
+  }, []);
 
   const addTask = () => {
-    setTasks([...tasks, task]);
-    setTask('');
+    // setUserTasks([...userTasks, task]);
   };
 
-  const removeTask = (index) => {
-    setTasks(tasks.filter((_, i) => i !== index));
+  const loadData = async () => {
+    setUserTasks(await getUserTasks());
   };
 
   return (
@@ -30,8 +37,8 @@ export default function Home() {
         <Text style={styles.sectionTitle}>Today's Tasks</Text>
 
         <View style={styles.items}>
-          {tasks.map((task, index) => (
-            <Task key={index}>{task}</Task>
+          {userTasks?.map((task: TaskType, index) => (
+            <Task key={index}>{task.name}</Task>
           ))}
         </View>
       </View>
@@ -39,12 +46,7 @@ export default function Home() {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.writeTaskWrapper}>
-        <TextInput
-          style={styles.input}
-          placeholder="Write a new task"
-          value={task}
-          onChangeText={(text) => setTask(text)}
-        />
+        <TextInput style={styles.input} placeholder="Write a new task" />
 
         <TouchableOpacity onPress={addTask}>
           <View style={styles.addWrapper}>
