@@ -1,6 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-import { Button } from 'react-native-paper';
+import { IconButton } from 'react-native-paper';
 
 import Home from './Home';
 import Profile from './Profile';
@@ -9,76 +9,74 @@ import TaskDetails from './TaskDetails';
 import Tasks from './Tasks';
 import { colors } from '../styles';
 
-const Stack = createStackNavigator();
+type TasksStackParams = {
+  Tasks: undefined;
+  SearchTasks: undefined;
+  TaskDetails: { id?: number };
+};
+
+const HomeStack = createStackNavigator();
+const TasksStack = createStackNavigator<TasksStackParams>();
+const ProfileStack = createStackNavigator();
 
 const HomeStackNavigator = () => {
   return (
-    <Stack.Navigator
+    <HomeStack.Navigator
       screenOptions={{
         headerStyle: {
           backgroundColor: colors.primary,
         },
         headerTintColor: '#fff',
       }}>
-      <Stack.Screen name="Home" component={Home} />
-    </Stack.Navigator>
+      <HomeStack.Screen name="Home" component={Home} />
+    </HomeStack.Navigator>
   );
-};
-
-type TasksStackParams = {
-  Tasks: undefined;
-  SearchTasks: undefined;
-  TaskDetails: undefined;
 };
 
 const TasksStackNavigator = () => {
   return (
-    <Stack.Navigator
+    <TasksStack.Navigator
       screenOptions={{
         headerStyle: {
           backgroundColor: colors.primary,
         },
         headerTintColor: '#fff',
       }}>
-      <Stack.Group>
-        <Stack.Screen name="Tasks" component={Tasks} options={{ title: 'All Tasks' }} />
-      </Stack.Group>
-      <Stack.Group>
-        <Stack.Screen
+      <TasksStack.Group>
+        <TasksStack.Screen name="Tasks" component={Tasks} options={{ title: 'All Tasks' }} />
+      </TasksStack.Group>
+      <TasksStack.Group>
+        <TasksStack.Screen
           name="SearchTasks"
           component={SearchTasks}
           options={{ title: 'Search Tasks' }}
         />
-      </Stack.Group>
-      <Stack.Group>
-        <Stack.Screen
+      </TasksStack.Group>
+      <TasksStack.Group>
+        <TasksStack.Screen
           name="TaskDetails"
           component={TaskDetails}
           options={{
             title: 'Task Details',
-            headerRight: () => (
-              <Button icon="check" textColor="#fff">
-                {' '}
-              </Button>
-            ), // Add a placeholder button without the `onPress` to avoid flicker
+            headerRight: () => <IconButton icon="check" iconColor="#fff" />, // Add a placeholder button without the `onPress` to avoid flicker
           }}
         />
-      </Stack.Group>
-    </Stack.Navigator>
+      </TasksStack.Group>
+    </TasksStack.Navigator>
   );
 };
 
 const ProfileStackNavigator = () => {
   return (
-    <Stack.Navigator
+    <ProfileStack.Navigator
       screenOptions={{
         headerStyle: {
           backgroundColor: colors.primary,
         },
         headerTintColor: '#fff',
       }}>
-      <Stack.Screen name="Profile" component={Profile} />
-    </Stack.Navigator>
+      <ProfileStack.Screen name="Profile" component={Profile} />
+    </ProfileStack.Navigator>
   );
 };
 

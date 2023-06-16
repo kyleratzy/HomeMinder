@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useEffect, useState } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { FAB } from 'react-native-paper';
+import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
+import { FAB, Badge } from 'react-native-paper';
 
 import Task from '../components/Task';
 import useStorage from '../hooks/useStorage';
@@ -35,7 +35,7 @@ export default function Tasks({ navigation }: NativeStackScreenProps<TasksStackP
             {userTasks?.map((task: TaskType, index) => (
               <View key={index} style={{ ...styles.taskWrapper }}>
                 {task.category !== userTasks[index - 1]?.category && (
-                  <Text style={globalStyles.tag}>{task.category}</Text>
+                  <Badge>{task.category.toUpperCase()}</Badge>
                 )}
                 <Task>{task.name}</Task>
               </View>

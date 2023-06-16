@@ -1,6 +1,8 @@
 export default {
   background: '#F8F8F8',
   text: '#333333',
+  textLighter: '#777',
+  textLightest: '#999',
   primary: '#ff6347',
   primaryLight: '#fcbdb3',
   primaryDark: '#a81c03',

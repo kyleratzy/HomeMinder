@@ -8,25 +8,18 @@ const globalStyles = StyleSheet.create({
     fontSize: 16,
   },
   h1: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 26,
+    fontWeight: '300',
     marginBottom: 8,
   },
   h2: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: '300',
     marginBottom: 8,
   },
   h3: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  tag: {
-    color: '#666',
-    fontSize: 14,
-    fontWeight: 'bold',
-    textTransform: 'uppercase',
-    letterSpacing: 3,
+    fontSize: 18,
+    fontWeight: '400',
     marginBottom: 4,
   },
   pageWrapper: {
