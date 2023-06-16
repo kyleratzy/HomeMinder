@@ -10,7 +10,7 @@ export default function useStorage(key: string) {
     }
   };
 
-  const setItem = async (value: any[]) => {
+  const setItem = async (value: any) => {
     try {
       const serialized_value = JSON.stringify(value);
       await AsyncStorage.setItem(key, serialized_value);

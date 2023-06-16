@@ -8,18 +8,18 @@ const globalStyles = StyleSheet.create({
     fontSize: 16,
   },
   h1: {
-    fontSize: 26,
+    fontSize: 32,
     fontWeight: '300',
     marginBottom: 8,
   },
   h2: {
-    fontSize: 20,
+    fontSize: 28,
     fontWeight: '300',
     marginBottom: 8,
   },
   h3: {
-    fontSize: 18,
-    fontWeight: '400',
+    fontSize: 24,
+    fontWeight: '300',
     marginBottom: 4,
   },
   pageWrapper: {
@@ -28,6 +28,20 @@ const globalStyles = StyleSheet.create({
   },
   container: {
     paddingHorizontal: 16,
+  },
+  card: {
+    backgroundColor: '#fff',
+    paddingHorizontal: 16,
+  },
+  border: {
+    borderWidth: 1,
+    borderColor: colors.textLighter,
+  },
+  sideBySide: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });
 

@@ -1,3 +1,4 @@
+import { useFocusEffect } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
@@ -9,14 +10,14 @@ import { TasksStackParams } from '../pages/navigation';
 import { colors, globalStyles } from '../styles';
 import { TaskType } from '../types';
 
-export default function Tasks({ navigation }: NativeStackScreenProps<TasksStackParams>) {
+export default function Tasks({ route, navigation }: NativeStackScreenProps<TasksStackParams>) {
   const [userTasks, setUserTasks] = useState<TaskType[]>([]);
   const [getUserTasks, postUserTasks] = useStorage('@user_tasks');
 
   // Hooks
-  useEffect(() => {
+  useFocusEffect(() => {
     loadData();
-  }, []);
+  });
 
   // Methods
   const loadData = async () => {
