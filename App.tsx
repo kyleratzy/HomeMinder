@@ -5,15 +5,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 
 import { TASKS, USER_TASKS } from './fixtures';
-import Home from './pages/Home';
-import Profile from './pages/Profile';
-import Tasks from './pages/Tasks';
+import { HomeStackNavigator, TasksStackNavigator, ProfileStackNavigator } from './pages/navigation';
+import colors from './styles/colors';
 
 const myNavigationTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    notification: 'rgba(255, 255, 255, 0.5)',
     secondaryContainer: 'transparent',
   },
 };
@@ -21,33 +19,29 @@ const Tab = createMaterialBottomTabNavigator();
 
 function Tabs() {
   return (
-    <Tab.Navigator
-      initialRouteName="Home"
-      activeColor="red"
-      inactiveColor="#f0edf6"
-      barStyle={{ backgroundColor: 'tomato' }}>
+    <Tab.Navigator initialRouteName="Home" activeColor={colors.primary} inactiveColor="#999">
       <Tab.Screen
         name="Home"
-        component={Home}
+        component={HomeStackNavigator}
         options={{
-          tabBarIcon: ({ color }) => <MaterialCommunityIcons name="home" color={color} size={26} />,
+          tabBarIcon: ({ color }) => <MaterialCommunityIcons name="home" color={color} size={30} />,
         }}
       />
       <Tab.Screen
         name="Tasks"
-        component={Tasks}
+        component={TasksStackNavigator}
         options={{
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="format-list-checkbox" color={color} size={26} />
+            <MaterialCommunityIcons name="format-list-checkbox" color={color} size={30} />
           ),
         }}
       />
       <Tab.Screen
         name="Profile"
-        component={Profile}
+        component={ProfileStackNavigator}
         options={{
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="account-cog" color={color} size={26} />
+            <MaterialCommunityIcons name="account-cog" color={color} size={30} />
           ),
         }}
       />
@@ -71,7 +65,6 @@ const seedDB = async () => {
   AsyncStorage.clear();
   try {
     await AsyncStorage.setItem('@tasks', JSON.stringify(TASKS));
-    console.log(JSON.stringify(USER_TASKS));
     await AsyncStorage.setItem('@user_tasks', JSON.stringify(USER_TASKS));
   } catch (e) {
     // saving error

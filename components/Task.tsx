@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { Card } from 'react-native-paper';
 
 interface Props {
   children: any;
@@ -7,22 +8,26 @@ interface Props {
 
 const Task = ({ children }: Props) => {
   return (
-    <View style={styles.container}>
-      <View style={styles.checkbox} />
-      <Text style={styles.text}>{children}</Text>
-    </View>
+    <Card style={styles.card}>
+      <View style={styles.container}>
+        <View style={styles.checkbox} />
+        <Text style={styles.text}>{children}</Text>
+      </View>
+    </Card>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  card: {
     backgroundColor: '#fff',
+    marginBottom: 10,
+    marginHorizontal: 10,
+  },
+  container: {
     padding: 15,
-    borderRadius: 10,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
   },
   checkbox: {
     width: 24,
