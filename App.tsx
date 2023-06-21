@@ -8,6 +8,7 @@ import { useRef, useState, useEffect } from 'react';
 import { Platform } from 'react-native';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 
+import { AppContextWrapper } from './AppContext';
 import { TASKS, USER_TASKS } from './fixtures';
 import { HomeStackNavigator, TasksStackNavigator, ProfileStackNavigator } from './pages/navigation';
 import colors from './styles/colors';
@@ -91,9 +92,11 @@ export default function App() {
 
   return (
     <PaperProvider theme={myNavigationTheme}>
-      <NavigationContainer>
-        <Tabs />
-      </NavigationContainer>
+      <AppContextWrapper>
+        <NavigationContainer>
+          <Tabs />
+        </NavigationContainer>
+      </AppContextWrapper>
     </PaperProvider>
   );
 }

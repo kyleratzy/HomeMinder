@@ -89,8 +89,9 @@ export const USER_TASKS = [
     description: '',
     category: 'hvac',
     image: { uri: 'https://picsum.photos/100' },
-    frequency: 10,
+    frequency: 90,
     interval: 'days',
+    checkins: ['2023-06-01'],
   },
   {
     id: 2,
@@ -98,8 +99,9 @@ export const USER_TASKS = [
     description: '',
     category: 'landscaping',
     image: { uri: 'https://picsum.photos/100' },
-    frequency: 10,
-    interval: 'days',
+    frequency: 1,
+    interval: 'years',
+    checkins: [],
   },
 ];
 

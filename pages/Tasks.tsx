@@ -1,29 +1,19 @@
-import { useFocusEffect } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { useState } from 'react';
+import { useContext } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
-import { FAB, Badge } from 'react-native-paper';
+import { FAB } from 'react-native-paper';
 
 import { TasksStackParams } from './navigation';
+import { AppContext } from '../AppContext';
 import Task from '../components/Task';
-import useStorage from '../hooks/useStorage';
 import { colors, globalStyles } from '../styles';
 import { TaskType } from '../types';
 
 export default function Tasks({ navigation }: NativeStackScreenProps<TasksStackParams>) {
-  const [userTasks, setUserTasks] = useState<TaskType[]>([]);
-  const [getUserTasks, postUserTasks] = useStorage('@user_tasks');
-
   // Hooks
-  useFocusEffect(() => {
-    loadData();
-  });
+  const { store, actions } = useContext(AppContext);
 
   // Methods
-  const loadData = async () => {
-    setUserTasks(await getUserTasks([]));
-  };
-
   const addTask = () => {
     // setUserTasks([...userTasks, task]);
   };
@@ -33,8 +23,8 @@ export default function Tasks({ navigation }: NativeStackScreenProps<TasksStackP
       <ScrollView alwaysBounceVertical fadingEdgeLength={20}>
         <SafeAreaView>
           <View style={globalStyles.container}>
-            {userTasks?.map((task: TaskType, index) => (
-              <View key={index} style={{ ...styles.taskWrapper }}>
+            {store.userTasks?.map((task: TaskType) => (
+              <View key={task.id} style={{ ...styles.taskWrapper }}>
                 <Task task={task} />
               </View>
             ))}

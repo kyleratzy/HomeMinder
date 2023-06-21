@@ -1,7 +1,7 @@
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { format } from 'date-fns';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { StyleSheet, View, ImageBackground, ScrollView } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import {
@@ -15,6 +15,7 @@ import {
   Text,
 } from 'react-native-paper';
 
+import { AppContext } from '../AppContext';
 import useStorage from '../hooks/useStorage';
 import { TasksStackParams } from '../pages/navigation';
 import { globalStyles, categories, FREQUENCIES } from '../styles';
@@ -28,26 +29,12 @@ export default function TaskDetails({
   const [task, setTask] = useState<TaskType | undefined>();
   const [showStartDate, setShowStartDate] = useState(false);
 
-  const [getTasks] = useStorage('@tasks');
-  const [getUserTasks, postUserTasks] = useStorage('@user_tasks');
-
   // Hooks
-  useEffect(() => {
-    loadData();
-  }, []);
+  const { store, actions } = useContext(AppContext);
 
   useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <IconButton icon="check" iconColor="#fff" onPress={() => navigation.navigate('Tasks')} />
-      ),
-    });
-  }, [navigation]);
-
-  // Methods
-  const loadData = async () => {
-    const allTasks = await getTasks([]);
-    const selectedTask: TaskType = allTasks.find((t: TaskType) => t.id === id);
+    const selectedTask: TaskType = store.tasks.find((t: TaskType) => t.id === id);
+    console.log(selectedTask);
 
     setTask({
       id: selectedTask.id,
@@ -59,8 +46,17 @@ export default function TaskDetails({
       frequency: '1',
       interval: 'days',
     });
-  };
+  }, []);
 
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <IconButton icon="check" iconColor="#fff" onPress={() => navigation.navigate('Tasks')} />
+      ),
+    });
+  }, [navigation]);
+
+  // Methods
   const onChangeDate = (event: DateTimePickerEvent, selectedDate: Date | undefined) => {
     setShowStartDate(false);
     if (selectedDate) {
@@ -69,13 +65,12 @@ export default function TaskDetails({
   };
 
   const handleSaveTask = async () => {
-    const userTasks = await getUserTasks([]);
+    console.log({ task });
     try {
-      const newUserTasks = [...userTasks, task];
-      postUserTasks(newUserTasks);
+      actions.addUserTask(task);
       navigation.navigate('Tasks');
     } catch (e) {
-      alert(userTasks);
+      alert('Error');
     }
   };
 
