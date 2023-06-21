@@ -15,7 +15,7 @@ import {
   Text,
 } from 'react-native-paper';
 
-import useStorage from '../hooks/useStorage';
+import { TASKS } from '../fixtures';
 import { useUserTasksStore } from '../hooks/useUserTasksStore';
 import { TasksStackParams } from '../pages/navigation';
 import { globalStyles, categories, FREQUENCIES } from '../styles';
@@ -28,15 +28,12 @@ export default function TaskDetails({
   const { id } = route.params;
   const [task, setTask] = useState<TaskType>();
   const [showStartDate, setShowStartDate] = useState(false);
-
-  const [getTasks] = useStorage('@tasks');
-
-  // Hooks
-  const { userTasks, addUserTask } = useUserTasksStore();
+  const { addUserTask } = useUserTasksStore();
 
   useEffect(() => {
     loadData();
   }, []);
+
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -47,8 +44,7 @@ export default function TaskDetails({
 
   // Methods
   const loadData = async () => {
-    const allTasks = await getTasks([]);
-    const selectedTask: TaskType = allTasks.find((t: TaskType) => t.id === id);
+    const selectedTask: TaskType = TASKS.find((t: TaskType) => t.id === id) as TaskType;
 
     setTask({
       id: selectedTask.id,
