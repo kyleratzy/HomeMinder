@@ -1,17 +1,16 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { useContext } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
 import { FAB } from 'react-native-paper';
 
 import { TasksStackParams } from './navigation';
-import { AppContext } from '../AppContext';
 import Task from '../components/Task';
+import { useUserTasksStore } from '../hooks/useUserTasksStore';
 import { colors, globalStyles } from '../styles';
 import { TaskType } from '../types';
 
 export default function Tasks({ navigation }: NativeStackScreenProps<TasksStackParams>) {
   // Hooks
-  const { store, actions } = useContext(AppContext);
+  const { userTasks } = useUserTasksStore();
 
   // Methods
   const addTask = () => {
@@ -23,7 +22,7 @@ export default function Tasks({ navigation }: NativeStackScreenProps<TasksStackP
       <ScrollView alwaysBounceVertical fadingEdgeLength={20}>
         <SafeAreaView>
           <View style={globalStyles.container}>
-            {store.userTasks?.map((task: TaskType) => (
+            {userTasks.map((task: TaskType) => (
               <View key={task.id} style={{ ...styles.taskWrapper }}>
                 <Task task={task} />
               </View>

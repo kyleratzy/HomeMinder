@@ -1,9 +1,8 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { useContext, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
 import { Searchbar } from 'react-native-paper';
 
-import { AppContext } from '../AppContext';
 import Task from '../components/Task';
 import useStorage from '../hooks/useStorage';
 import { TasksStackParams } from '../pages/navigation';
@@ -19,9 +18,15 @@ export default function SearchTasks({
   const [getTasks] = useStorage('@tasks');
 
   // Hooks
-  const { store, actions } = useContext(AppContext);
+  useEffect(() => {
+    loadData();
+  }, []);
 
   // Methods
+  const loadData = async () => {
+    setFilteredTasks(await getTasks([]));
+  };
+
   const onChangeSearch = (query: string) => setSearchQuery(query);
 
   const filter = (task: TaskType) => {
@@ -47,7 +52,7 @@ export default function SearchTasks({
         <SafeAreaView>
           <View style={globalStyles.container}>
             <View>
-              {store.tasks.filter(filter).map((task: TaskType) => (
+              {filteredTasks?.filter(filter).map((task: TaskType) => (
                 <Task task={task} key={task.id} />
               ))}
             </View>

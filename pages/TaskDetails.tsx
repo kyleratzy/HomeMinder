@@ -1,7 +1,7 @@
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { format } from 'date-fns';
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, View, ImageBackground, ScrollView } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import {
@@ -15,8 +15,8 @@ import {
   Text,
 } from 'react-native-paper';
 
-import { AppContext } from '../AppContext';
 import useStorage from '../hooks/useStorage';
+import { useUserTasksStore } from '../hooks/useUserTasksStore';
 import { TasksStackParams } from '../pages/navigation';
 import { globalStyles, categories, FREQUENCIES } from '../styles';
 import { TaskType } from '../types';
@@ -26,15 +26,29 @@ export default function TaskDetails({
   navigation,
 }: NativeStackScreenProps<TasksStackParams, 'TaskDetails'>) {
   const { id } = route.params;
-  const [task, setTask] = useState<TaskType | undefined>();
+  const [task, setTask] = useState<TaskType>();
   const [showStartDate, setShowStartDate] = useState(false);
 
+  const [getTasks] = useStorage('@tasks');
+
   // Hooks
-  const { store, actions } = useContext(AppContext);
+  const { userTasks, addUserTask } = useUserTasksStore();
 
   useEffect(() => {
-    const selectedTask: TaskType = store.tasks.find((t: TaskType) => t.id === id);
-    console.log(selectedTask);
+    loadData();
+  }, []);
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <IconButton icon="check" iconColor="#fff" onPress={() => navigation.navigate('Tasks')} />
+      ),
+    });
+  }, [navigation]);
+
+  // Methods
+  const loadData = async () => {
+    const allTasks = await getTasks([]);
+    const selectedTask: TaskType = allTasks.find((t: TaskType) => t.id === id);
 
     setTask({
       id: selectedTask.id,
@@ -46,17 +60,8 @@ export default function TaskDetails({
       frequency: '1',
       interval: 'days',
     });
-  }, []);
+  };
 
-  useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <IconButton icon="check" iconColor="#fff" onPress={() => navigation.navigate('Tasks')} />
-      ),
-    });
-  }, [navigation]);
-
-  // Methods
   const onChangeDate = (event: DateTimePickerEvent, selectedDate: Date | undefined) => {
     setShowStartDate(false);
     if (selectedDate) {
@@ -65,12 +70,11 @@ export default function TaskDetails({
   };
 
   const handleSaveTask = async () => {
-    console.log({ task });
     try {
-      actions.addUserTask(task);
+      addUserTask(task as TaskType);
       navigation.navigate('Tasks');
     } catch (e) {
-      alert('Error');
+      alert('error');
     }
   };
 

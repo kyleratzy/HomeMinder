@@ -1,19 +1,35 @@
-import { useContext } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect } from 'react';
 import { StyleSheet, View, ImageBackground } from 'react-native';
 import { Text } from 'react-native-paper';
 
-import { AppContext } from '../AppContext';
 import TaskCheckbox from '../components/TaskCheckbox';
 import { startOfCurrentWeek, endOfCurrentWeek } from '../helpers/dates';
+import useStorage from '../hooks/useStorage';
+import { useUserTasksStore } from '../hooks/useUserTasksStore';
 import { globalStyles } from '../styles';
 import { TaskType } from '../types';
 
 export default function Home() {
   // Hooks
-  const { store, actions } = useContext(AppContext);
+  const { userTasks } = useUserTasksStore();
+  // const hasHydrated = useUserTasksStore((state) => state._hasHydrated);
 
   const image = {
     uri: 'https://www.bhg.com/thmb/3Vf9GXp3T-adDlU6tKpTbb-AEyE=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/white-modern-house-curved-patio-archway-c0a4a3b3-aa51b24d14d0464ea15d36e05aa85ac9.jpg',
+  };
+
+  const [getUserTasks] = useStorage('@user_tasks');
+
+  // Hooks
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    const allTasks = await AsyncStorage.getItem('@user_tasks');
+    console.log(allTasks);
   };
 
   return (
@@ -25,7 +41,7 @@ export default function Home() {
       </ImageBackground>
       <View style={styles.body}>
         <Text style={globalStyles.h1}>This Week's Tasks</Text>
-        {store.userTasks.map((task: TaskType) => (
+        {userTasks.map((task: TaskType) => (
           <TaskCheckbox task={task} key={task.id} />
         ))}
       </View>
