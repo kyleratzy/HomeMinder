@@ -2,7 +2,7 @@ import { StyleSheet, View, ImageBackground } from 'react-native';
 import { Text } from 'react-native-paper';
 
 import TaskCheckbox from '../components/TaskCheckbox';
-import { dueThisWeek } from '../helpers/dates';
+import { dueThisWeek, dueThisMonth } from '../helpers/dates';
 import { useUserTasksStore } from '../hooks/useUserTasksStore';
 import { globalStyles } from '../styles';
 import { TaskType } from '../types';
@@ -16,10 +16,6 @@ export default function Home() {
     uri: 'https://www.bhg.com/thmb/3Vf9GXp3T-adDlU6tKpTbb-AEyE=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/white-modern-house-curved-patio-archway-c0a4a3b3-aa51b24d14d0464ea15d36e05aa85ac9.jpg',
   };
 
-  const filter = (task: TaskType) => {
-    return dueThisWeek(task);
-  };
-
   return (
     <View style={styles.wrapper}>
       <ImageBackground source={image} resizeMode="cover">
@@ -29,7 +25,12 @@ export default function Home() {
       </ImageBackground>
       <View style={styles.body}>
         <Text style={globalStyles.h1}>This Week's Tasks</Text>
-        {userTasks.filter(filter).map((task: TaskType) => (
+        {userTasks.filter(dueThisWeek).map((task: TaskType) => (
+          <TaskCheckbox task={task} key={task.id} />
+        ))}
+
+        <Text style={globalStyles.h1}>This Months's Tasks</Text>
+        {userTasks.filter(dueThisMonth).map((task: TaskType) => (
           <TaskCheckbox task={task} key={task.id} />
         ))}
       </View>
