@@ -1,12 +1,8 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
-import * as Notifications from 'expo-notifications';
-import { useRef, useState, useEffect } from 'react';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 
-import { TASKS, USER_TASKS } from './fixtures';
 import { HomeStackNavigator, TasksStackNavigator, ProfileStackNavigator } from './pages/navigation';
 import colors from './styles/colors';
 
@@ -52,10 +48,6 @@ function Tabs() {
 }
 
 export default function App() {
-  useEffect(() => {
-    seedDB();
-  }, []);
-
   return (
     <PaperProvider theme={myNavigationTheme}>
       <NavigationContainer>
@@ -64,13 +56,3 @@ export default function App() {
     </PaperProvider>
   );
 }
-
-const seedDB = async () => {
-  AsyncStorage.clear();
-  try {
-    await AsyncStorage.setItem('@tasks', JSON.stringify(TASKS));
-    await AsyncStorage.setItem('@userTasks', JSON.stringify(USER_TASKS));
-  } catch (e) {
-    alert('Error');
-  }
-};
