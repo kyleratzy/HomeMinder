@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, ImageBackground } from 'react-native';
-import { Card } from 'react-native-paper';
+import { StyleSheet, View, ImageBackground } from 'react-native';
+import { Text } from 'react-native-paper';
 
+import TaskCheckbox from '../components/TaskCheckbox';
 import useStorage from '../hooks/useStorage';
 import { globalStyles } from '../styles';
 
@@ -25,16 +26,16 @@ export default function Home() {
 
   return (
     <View style={styles.wrapper}>
-      <View style={styles.banner}>
-        <ImageBackground source={image} resizeMode="cover">
+      <ImageBackground source={image} resizeMode="cover">
+        <View style={styles.banner}>
           <Text style={styles.banner_text}>Welcome Kyle!</Text>
-        </ImageBackground>
-      </View>
+        </View>
+      </ImageBackground>
       <View style={styles.body}>
         <Text style={globalStyles.h1}>This Week's Tasks</Text>
-        <Card>
-          <Text>Task</Text>
-        </Card>
+        {userTasks.map((task) => (
+          <TaskCheckbox task={task} />
+        ))}
       </View>
     </View>
   );
@@ -50,6 +51,7 @@ const styles = StyleSheet.create({
   },
   banner: {
     height: 200,
+    justifyContent: 'flex-end',
   },
   banner_text: {
     fontSize: 24,

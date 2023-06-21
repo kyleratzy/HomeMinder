@@ -1,8 +1,8 @@
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, ImageBackground } from 'react-native';
+import { StyleSheet, View, ImageBackground, ScrollView } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import {
   DefaultTheme,
@@ -10,9 +10,9 @@ import {
   IconButton,
   Card,
   Badge,
-  Switch,
   Divider,
   TextInput,
+  Text,
 } from 'react-native-paper';
 
 import useStorage from '../hooks/useStorage';
@@ -25,12 +25,8 @@ export default function TaskDetails({
   navigation,
 }: NativeStackScreenProps<TasksStackParams, 'TaskDetails'>) {
   const { id } = route.params;
-  const [task, setTask] = useState<TaskType>();
-  const [remindersOn, setRemindersOn] = useState(true);
+  const [task, setTask] = useState<TaskType | undefined>();
   const [showStartDate, setShowStartDate] = useState(false);
-  const [startDate, setStartDate] = useState(new Date());
-  const [frequency, setFrequency] = useState('2');
-  const [interval, setInterval] = useState('weeks');
 
   const [getTasks] = useStorage('@tasks');
   const [getUserTasks, postUserTasks] = useStorage('@user_tasks');
@@ -50,25 +46,30 @@ export default function TaskDetails({
 
   // Methods
   const loadData = async () => {
-    const allTasks = await getTasks();
+    const allTasks = await getTasks([]);
     const selectedTask: TaskType = allTasks.find((t: TaskType) => t.id === id);
 
     setTask({
       id: selectedTask.id,
       name: selectedTask.name,
-      description: selectedTask.description,
+      notes: '',
       image: selectedTask.image,
       category: selectedTask.category,
+      startDate: new Date(),
+      frequency: '1',
+      interval: 'days',
     });
   };
 
-  const onChangeDate = (event, selectedDate) => {
+  const onChangeDate = (event: DateTimePickerEvent, selectedDate: Date | undefined) => {
     setShowStartDate(false);
-    setStartDate(selectedDate);
+    if (selectedDate) {
+      setTask({ ...(task as TaskType), startDate: selectedDate });
+    }
   };
 
   const handleSaveTask = async () => {
-    const userTasks = await getUserTasks();
+    const userTasks = await getUserTasks([]);
     try {
       const newUserTasks = [...userTasks, task];
       postUserTasks(newUserTasks);
@@ -79,93 +80,106 @@ export default function TaskDetails({
   };
 
   return (
-    <View style={globalStyles.pageWrapper}>
-      {task && (
-        <View style={{ ...globalStyles.container }}>
-          <View style={{ justifyContent: 'center', flexDirection: 'row', padding: 16 }}>
-            <ImageBackground source={task.image} resizeMode="cover">
-              <View style={styles.task_image} />
-            </ImageBackground>
-          </View>
-
-          <View style={{ justifyContent: 'center', alignItems: 'center', padding: 16 }}>
-            <Text style={globalStyles.h1}>{task.name}</Text>
-            <Badge
-              size={22}
-              style={{
-                backgroundColor: categories[task.category].color,
-                alignSelf: 'center',
-                paddingHorizontal: 8,
-              }}>
-              {task.category.toUpperCase()}
-            </Badge>
-          </View>
-
-          <Card style={{ ...globalStyles.card, marginBottom: 32 }}>
-            <View style={globalStyles.sideBySide}>
-              <Text style={{ ...globalStyles.h3, marginBottom: 0 }}>Reminders</Text>
-              <Switch value={remindersOn} onValueChange={() => setRemindersOn(!remindersOn)} />
-            </View>
-            <Divider style={{ marginBottom: 16, marginHorizontal: -16 }} />
-
-            <View style={{ ...globalStyles.sideBySide, marginBottom: 16 }}>
-              <Text style={globalStyles.text}>Every:</Text>
-              <View style={{ flexDirection: 'row', flexBasis: 160 }}>
-                <TextInput
-                  keyboardType="numeric"
-                  value={frequency}
-                  onChangeText={(value) => setFrequency(value)}
-                  style={{
-                    backgroundColor: '#fff',
-                    marginRight: 8,
-                  }}
-                  underlineColor={DefaultTheme.colors.primary}
-                />
-                <Dropdown
-                  style={{
-                    flex: 1,
-                    borderBottomColor: DefaultTheme.colors.primary,
-                    borderBottomWidth: 0.5,
-                  }}
-                  data={FREQUENCIES}
-                  maxHeight={300}
-                  labelField="label"
-                  valueField="value"
-                  searchPlaceholder="Search..."
-                  value={interval}
-                  onChange={(item) => {
-                    setFrequency(item.value);
-                  }}
-                />
-              </View>
+    <ScrollView>
+      <View style={globalStyles.pageWrapper}>
+        {task && (
+          <View style={{ ...globalStyles.container }}>
+            <View style={{ justifyContent: 'center', flexDirection: 'row' }}>
+              <ImageBackground source={task.image} resizeMode="cover">
+                <View style={styles.task_image} />
+              </ImageBackground>
             </View>
 
-            <View style={{ ...globalStyles.sideBySide, marginBottom: 16 }}>
-              <Text style={globalStyles.text}>Start On:</Text>
-              <Text
+            <View style={{ justifyContent: 'center', alignItems: 'center', padding: 16 }}>
+              <Text style={globalStyles.h1}>{task.name}</Text>
+              <Badge
+                size={22}
                 style={{
-                  paddingVertical: 16,
-                  borderBottomColor: DefaultTheme.colors.primary,
-                  borderBottomWidth: 0.5,
-                  textAlign: 'center',
-                  flexBasis: 100,
-                }}
-                onPress={() => setShowStartDate(true)}>
-                {format(startDate, 'MM/dd/yyyy')}
-              </Text>
-
-              {showStartDate && (
-                <DateTimePicker value={startDate} mode="date" onChange={onChangeDate} />
-              )}
+                  backgroundColor: categories[task.category].color,
+                  alignSelf: 'center',
+                  paddingHorizontal: 8,
+                }}>
+                {task.category.toUpperCase()}
+              </Badge>
             </View>
-          </Card>
 
-          <Button mode="contained" onPress={handleSaveTask}>
-            Save
-          </Button>
-        </View>
-      )}
-    </View>
+            <Card style={{ ...globalStyles.card, marginBottom: 32 }}>
+              <View>
+                <Divider style={{ marginBottom: 16, marginHorizontal: -16 }} />
+
+                <View style={{ ...globalStyles.sideBySide, marginBottom: 16 }}>
+                  <Text style={globalStyles.label}>Every:</Text>
+                  <View style={{ flexDirection: 'row', flexBasis: 160 }}>
+                    <TextInput
+                      keyboardType="numeric"
+                      value={task.frequency}
+                      onChangeText={(value) => setTask({ ...task, frequency: value })}
+                      style={{
+                        marginRight: 8,
+                      }}
+                      underlineColor={DefaultTheme.colors.primary}
+                    />
+                    <Dropdown
+                      style={{
+                        flex: 1,
+                        borderBottomColor: DefaultTheme.colors.primary,
+                        borderBottomWidth: 0.5,
+                        backgroundColor: DefaultTheme.colors.surfaceVariant,
+                        paddingHorizontal: 8,
+                      }}
+                      data={FREQUENCIES}
+                      maxHeight={300}
+                      labelField="label"
+                      valueField="value"
+                      value={task.interval}
+                      onChange={({ value }) => setTask({ ...task, interval: value })}
+                    />
+                  </View>
+                </View>
+
+                <View style={{ ...globalStyles.sideBySide, marginBottom: 24 }}>
+                  <Text style={globalStyles.label}>Start On:</Text>
+                  <Text
+                    style={{
+                      paddingVertical: 16,
+                      borderBottomColor: DefaultTheme.colors.primary,
+                      borderBottomWidth: 0.5,
+                      textAlign: 'center',
+                      flexBasis: 100,
+                      backgroundColor: DefaultTheme.colors.surfaceVariant,
+                    }}
+                    onPress={() => setShowStartDate(true)}>
+                    {format(task.startDate, 'MM/dd/yyyy')}
+                  </Text>
+
+                  {showStartDate && (
+                    <DateTimePicker value={task.startDate} mode="date" onChange={onChangeDate} />
+                  )}
+                </View>
+
+                <View>
+                  <TextInput
+                    label="Notes"
+                    value={task.notes || ''}
+                    onChangeText={(value) => setTask({ ...task, notes: value })}
+                    numberOfLines={5}
+                    placeholder="..."
+                    multiline
+                    style={{
+                      marginBottom: 16,
+                    }}
+                  />
+                </View>
+              </View>
+            </Card>
+
+            <Button mode="contained" onPress={handleSaveTask}>
+              Save
+            </Button>
+          </View>
+        )}
+      </View>
+    </ScrollView>
   );
 }
 

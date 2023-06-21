@@ -8,6 +8,7 @@ export const categories: Record<string, any> = {
 };
 
 export const FREQUENCIES = [
+  { label: 'Secs', value: 'seconds' },
   { label: 'Hours', value: 'hours' },
   { label: 'Days', value: 'days' },
   { label: 'Weeks', value: 'weeks' },

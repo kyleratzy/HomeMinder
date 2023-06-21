@@ -1,16 +1,16 @@
 import { useFocusEffect } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
 import { FAB, Badge } from 'react-native-paper';
 
+import { TasksStackParams } from './navigation';
 import Task from '../components/Task';
 import useStorage from '../hooks/useStorage';
-import { TasksStackParams } from '../pages/navigation';
 import { colors, globalStyles } from '../styles';
 import { TaskType } from '../types';
 
-export default function Tasks({ route, navigation }: NativeStackScreenProps<TasksStackParams>) {
+export default function Tasks({ navigation }: NativeStackScreenProps<TasksStackParams>) {
   const [userTasks, setUserTasks] = useState<TaskType[]>([]);
   const [getUserTasks, postUserTasks] = useStorage('@user_tasks');
 
@@ -35,10 +35,7 @@ export default function Tasks({ route, navigation }: NativeStackScreenProps<Task
           <View style={globalStyles.container}>
             {userTasks?.map((task: TaskType, index) => (
               <View key={index} style={{ ...styles.taskWrapper }}>
-                {task.category !== userTasks[index - 1]?.category && (
-                  <Badge>{task.category.toUpperCase()}</Badge>
-                )}
-                <Task>{task.name}</Task>
+                <Task task={task} />
               </View>
             ))}
           </View>

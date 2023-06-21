@@ -7,6 +7,11 @@ const globalStyles = StyleSheet.create({
     color: colors.text,
     fontSize: 16,
   },
+  label: {
+    color: colors.text,
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
   h1: {
     fontSize: 32,
     fontWeight: '300',
@@ -23,7 +28,7 @@ const globalStyles = StyleSheet.create({
     marginBottom: 4,
   },
   pageWrapper: {
-    paddingTop: 16,
+    paddingVertical: 16,
     flexGrow: 1,
   },
   container: {

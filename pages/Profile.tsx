@@ -1,6 +1,17 @@
+import * as Notifications from 'expo-notifications';
 import { StyleSheet, Text, View } from 'react-native';
 
 export default function Profile() {
+  const setNotification = async () => {
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: 'Title',
+        body: 'Here is the notification body',
+        data: { data: 'goes here' },
+      },
+      trigger: { seconds: 10, repeats: true },
+    });
+  };
   return (
     <View style={styles.container}>
       <Text>Profile</Text>

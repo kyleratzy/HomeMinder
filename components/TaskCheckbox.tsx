@@ -1,7 +1,8 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { StyleSheet, Text, View, ImageBackground } from 'react-native';
-import { Badge, Card } from 'react-native-paper';
+import { useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { Badge, Card, Checkbox } from 'react-native-paper';
 
 import { TasksStackParams } from '../pages/navigation';
 import { colors, globalStyles, categories } from '../styles';
@@ -11,20 +12,21 @@ type TaskProps = {
   task: TaskType;
 };
 
+type NavigationProps = StackNavigationProp<TasksStackParams>;
+
 export default function ({ task }: TaskProps) {
-  const navigation = useNavigation<StackNavigationProp<TasksStackParams>>();
+  const [checked, setChecked] = useState(false);
+  const navigation = useNavigation<NavigationProps>();
 
   return (
-    <Card style={styles.task} onPress={() => navigation.navigate('TaskDetails', { id: task.id })}>
+    <Card style={styles.task}>
       <View
         style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
           width: '100%',
         }}>
-        <ImageBackground source={task?.image} resizeMode="cover">
-          <View style={styles.task_image} />
-        </ImageBackground>
+        <Checkbox status={checked ? 'checked' : 'unchecked'} onPress={() => setChecked(!checked)} />
         <View style={styles.task_content}>
           <Text style={globalStyles.h3}>{task.name}</Text>
           <Badge

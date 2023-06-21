@@ -1,14 +1,18 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useEffect, useState } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, Text, View, ImageBackground } from 'react-native';
-import { Badge, Searchbar, Card } from 'react-native-paper';
+import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
+import { Searchbar } from 'react-native-paper';
 
+import Task from '../components/Task';
 import useStorage from '../hooks/useStorage';
 import { TasksStackParams } from '../pages/navigation';
-import { colors, globalStyles, categories } from '../styles';
+import { colors, globalStyles } from '../styles';
 import { TaskType } from '../types';
 
-export default function SearchTasks({ navigation }: NativeStackScreenProps<TasksStackParams>) {
+export default function SearchTasks({
+  navigation,
+  route,
+}: NativeStackScreenProps<TasksStackParams>) {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredTasks, setFilteredTasks] = useState([]);
   const [getTasks] = useStorage('@tasks');
@@ -48,36 +52,8 @@ export default function SearchTasks({ navigation }: NativeStackScreenProps<Tasks
         <SafeAreaView>
           <View style={globalStyles.container}>
             <View>
-              {filteredTasks?.filter(filter).map((task: TaskType, index) => (
-                <Card
-                  key={index}
-                  style={styles.task}
-                  onPress={() => navigation.navigate('TaskDetails', { id: task.id })}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      width: '100%',
-                    }}>
-                    <ImageBackground source={task?.image} resizeMode="cover">
-                      <View style={styles.task_image} />
-                    </ImageBackground>
-                    <View style={styles.task_content}>
-                      <Text style={globalStyles.h3}>{task.name}</Text>
-                      <Badge
-                        size={16}
-                        style={{
-                          ...styles.task_badge,
-                          backgroundColor: categories[task.category].color,
-                        }}>
-                        {task.category.toUpperCase()}
-                      </Badge>
-                      <Text numberOfLines={1} ellipsizeMode="tail" style={styles.task_description}>
-                        {task.description}
-                      </Text>
-                    </View>
-                  </View>
-                </Card>
+              {filteredTasks?.filter(filter).map((task: TaskType) => (
+                <Task task={task} key={task.id} />
               ))}
             </View>
           </View>

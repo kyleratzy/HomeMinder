@@ -83,8 +83,24 @@ export const TASKS = [
 ];
 
 export const USER_TASKS = [
-  { id: 1, name: 'Replace HVAC Filter', description: '', category: 'hvac' },
-  { id: 2, name: 'Prune Trees', description: '', category: 'landscaping' },
+  {
+    id: 1,
+    name: 'Replace HVAC Filter',
+    description: '',
+    category: 'hvac',
+    image: { uri: 'https://picsum.photos/100' },
+    frequency: 10,
+    interval: 'days',
+  },
+  {
+    id: 2,
+    name: 'Prune Trees',
+    description: '',
+    category: 'landscaping',
+    image: { uri: 'https://picsum.photos/100' },
+    frequency: 10,
+    interval: 'days',
+  },
 ];
 
 export const CATEGORIES = [
@@ -93,4 +109,5 @@ export const CATEGORIES = [
   { name: 'Appliances' },
   { name: 'Plumbing' },
   { name: 'Exterior' },
+  { name: 'Interior' },
 ];
