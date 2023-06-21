@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { isWithinInterval, parseISO } from 'date-fns';
 import { StyleSheet, Text, View } from 'react-native';
 import { Card, Checkbox } from 'react-native-paper';
 
+import { startOfCurrentWeek, endOfCurrentWeek } from '../helpers/dates';
+import { useUserTasksStore } from '../hooks/useUserTasksStore';
 import { globalStyles } from '../styles';
 import { TaskType } from '../types/TaskType';
 
@@ -10,7 +12,29 @@ type TaskProps = {
 };
 
 export default function ({ task }: TaskProps) {
-  const [checked, setChecked] = useState(false);
+  const { completeTask, uncompleteTask } = useUserTasksStore();
+
+  // Methods
+  const isChecked = () => {
+    if (!task.checkins) {
+      return false;
+    }
+    const lastCheckin = task.checkins[task.checkins.length - 1];
+    return isWithinInterval(parseISO(lastCheckin), {
+      start: startOfCurrentWeek,
+      end: endOfCurrentWeek,
+    });
+  };
+
+  const checked = isChecked();
+
+  const handleCheck = () => {
+    if (checked) {
+      uncompleteTask(task);
+    } else {
+      completeTask(task);
+    }
+  };
 
   return (
     <Card style={styles.task}>
@@ -21,10 +45,7 @@ export default function ({ task }: TaskProps) {
           width: '100%',
         }}>
         <View style={{ flexBasis: 40 }}>
-          <Checkbox
-            status={checked ? 'checked' : 'unchecked'}
-            onPress={() => setChecked(!checked)}
-          />
+          <Checkbox status={checked ? 'checked' : 'unchecked'} onPress={handleCheck} />
         </View>
         <Text
           style={{

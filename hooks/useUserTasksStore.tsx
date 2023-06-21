@@ -8,6 +8,8 @@ interface UserTasksStoreState {
   userTasks: TaskType[];
   _hasHydrated: boolean;
   addUserTask(task: TaskType): void;
+  completeTask(task: TaskType): void;
+  uncompleteTask(task: TaskType): void;
 }
 
 export const useUserTasksStore = create(
@@ -17,6 +19,30 @@ export const useUserTasksStore = create(
         userTasks: [],
         _hasHydrated: false,
         addUserTask: (task: TaskType) => set({ userTasks: [...get().userTasks, task] }),
+        completeTask: (task: TaskType) => {
+          const completedTask = {
+            ...task,
+            checkins: [...(task.checkins || []), new Date().toISOString()],
+          };
+          const existingTasks = [...get().userTasks];
+          existingTasks.splice(
+            existingTasks.findIndex((t: TaskType) => t.id === task.id),
+            1
+          );
+          set({ userTasks: [...existingTasks, completedTask] });
+          // AsyncStorage.clear();
+        },
+        uncompleteTask: (task: TaskType) => {
+          const uncompletedTask = { ...task };
+          uncompletedTask?.checkins?.pop();
+
+          const existingTasks = [...get().userTasks];
+          existingTasks.splice(
+            existingTasks.findIndex((t: TaskType) => t.id === task.id),
+            1
+          );
+          set({ userTasks: [...existingTasks, uncompletedTask] });
+        },
       }),
       {
         name: '@userTasks',
