@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback, useState } from 'react';
 import { StyleSheet, View, ImageBackground } from 'react-native';
 import { Text } from 'react-native-paper';
 
@@ -11,9 +12,11 @@ export default function Home() {
   const [getUserTasks, postUserTasks] = useStorage('@user_tasks');
 
   // Hooks
-  useEffect(() => {
-    loadData();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      loadData();
+    }, [])
+  );
 
   // Methods
   const loadData = async () => {
