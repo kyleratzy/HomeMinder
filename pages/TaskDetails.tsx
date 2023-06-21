@@ -1,6 +1,6 @@
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View, ImageBackground, ScrollView } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
@@ -52,7 +52,7 @@ export default function TaskDetails({
       notes: '',
       image: selectedTask.image,
       category: selectedTask.category,
-      startDate: new Date(),
+      startDate: new Date().toISOString(),
       frequency: '1',
       interval: 'days',
     });
@@ -61,7 +61,7 @@ export default function TaskDetails({
   const onChangeDate = (event: DateTimePickerEvent, selectedDate: Date | undefined) => {
     setShowStartDate(false);
     if (selectedDate) {
-      setTask({ ...(task as TaskType), startDate: selectedDate });
+      setTask({ ...(task as TaskType), startDate: selectedDate.toISOString() });
     }
   };
 
@@ -144,11 +144,15 @@ export default function TaskDetails({
                       backgroundColor: DefaultTheme.colors.surfaceVariant,
                     }}
                     onPress={() => setShowStartDate(true)}>
-                    {format(task.startDate, 'MM/dd/yyyy')}
+                    {format(parseISO(task.startDate), 'MM/dd/yyyy')}
                   </Text>
 
                   {showStartDate && (
-                    <DateTimePicker value={task.startDate} mode="date" onChange={onChangeDate} />
+                    <DateTimePicker
+                      value={parseISO(task.startDate)}
+                      mode="date"
+                      onChange={onChangeDate}
+                    />
                   )}
                 </View>
 

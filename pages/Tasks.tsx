@@ -11,11 +11,7 @@ import { TaskType } from '../types';
 export default function Tasks({ navigation }: NativeStackScreenProps<TasksStackParams>) {
   // Hooks
   const { userTasks } = useUserTasksStore();
-
-  // Methods
-  const addTask = () => {
-    // setUserTasks([...userTasks, task]);
-  };
+  console.log({ userTasks });
 
   return (
     <View style={globalStyles.pageWrapper}>

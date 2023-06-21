@@ -1,4 +1,12 @@
-import { add, startOfWeek, endOfWeek, isWithinInterval, startOfMonth, endOfMonth } from 'date-fns';
+import {
+  add,
+  parseISO,
+  startOfWeek,
+  endOfWeek,
+  isWithinInterval,
+  startOfMonth,
+  endOfMonth,
+} from 'date-fns';
 
 import { TaskType } from '../types';
 
@@ -6,14 +14,14 @@ export const startOfCurrentWeek = startOfWeek(new Date());
 export const endOfCurrentWeek = endOfWeek(new Date());
 
 export const dueThisWeek = (task: TaskType) => {
-  const lastCheckin: Date | undefined = task.checkins
+  const lastCheckin: string | undefined = task.checkins
     ? task.checkins[task.checkins.length - 1]
     : undefined;
   const nextDate = lastCheckin
-    ? add(lastCheckin, {
+    ? add(parseISO(lastCheckin), {
         [task.interval]: task.frequency,
       })
-    : task.startDate;
+    : parseISO(task.startDate);
 
   return isWithinInterval(nextDate, {
     start: startOfCurrentWeek,
@@ -22,14 +30,14 @@ export const dueThisWeek = (task: TaskType) => {
 };
 
 export const dueThisMonth = (task: TaskType) => {
-  const lastCheckin: Date | undefined = task.checkins
+  const lastCheckin: string | undefined = task.checkins
     ? task.checkins[task.checkins.length - 1]
     : undefined;
   const nextDate = lastCheckin
-    ? add(lastCheckin, {
+    ? add(parseISO(lastCheckin), {
         [task.interval]: task.frequency,
       })
-    : task.startDate;
+    : parseISO(task.startDate);
 
   return (
     !isWithinInterval(nextDate, {

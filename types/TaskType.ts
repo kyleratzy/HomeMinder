@@ -6,9 +6,9 @@ export type TaskType = {
   notes: string;
   category: string;
   image: ImageSourcePropType;
-  startDate: Date;
+  startDate: string;
   frequency: string;
   interval: string;
-  checkins?: Date[];
+  checkins?: string[];
   instructions?: any[];
 };
