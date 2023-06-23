@@ -137,6 +137,7 @@ export function Tabs() {
         name="HomeMain"
         component={HomeStackNavigator}
         options={{
+          title: 'Home',
           tabBarIcon: ({ color }) => <MaterialCommunityIcons name="home" color={color} size={30} />,
         }}
       />
@@ -144,6 +145,7 @@ export function Tabs() {
         name="TasksMain"
         component={TasksStackNavigator}
         options={{
+          title: 'Tasks',
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="format-list-checkbox" color={color} size={30} />
           ),
@@ -153,6 +155,7 @@ export function Tabs() {
         name="ProfileMain"
         component={ProfileStackNavigator}
         options={{
+          title: 'Profile',
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="account-cog" color={color} size={30} />
           ),
