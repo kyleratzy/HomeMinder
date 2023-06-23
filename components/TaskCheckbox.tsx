@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import { isWithinInterval, parseISO } from 'date-fns';
 import { StyleSheet, Text, View } from 'react-native';
 import { Card, Checkbox } from 'react-native-paper';
@@ -13,6 +14,7 @@ type TaskProps = {
 
 export default function ({ task }: TaskProps) {
   const { completeTask, uncompleteTask } = useUserTasksStore();
+  const navigation = useNavigation();
 
   // Methods
   const isChecked = () => {
@@ -48,6 +50,7 @@ export default function ({ task }: TaskProps) {
           <Checkbox status={checked ? 'checked' : 'unchecked'} onPress={handleCheck} />
         </View>
         <Text
+          onPress={() => navigation.navigate('TasksMain', { screen: 'ViewTask', params: { task } })}
           style={{
             ...globalStyles.h3,
             flexGrow: 1,

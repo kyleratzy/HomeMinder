@@ -1,5 +1,4 @@
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { format, parseISO } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View, ImageBackground, ScrollView } from 'react-native';
@@ -15,17 +14,13 @@ import {
   Text,
 } from 'react-native-paper';
 
-import { TASKS } from '../fixtures';
+import { TasksTabScreenProps } from './navigation';
 import { useUserTasksStore } from '../hooks/useUserTasksStore';
-import { TasksStackParams } from '../pages/navigation';
 import { globalStyles, categories, FREQUENCIES } from '../styles';
 import { TaskType } from '../types';
 
-export default function TaskDetails({
-  route,
-  navigation,
-}: NativeStackScreenProps<TasksStackParams, 'TaskDetails'>) {
-  const { id } = route.params;
+export default function EditTask({ route, navigation }: TasksTabScreenProps<'EditTask'>) {
+  const taskInit = route.params.task;
   const [task, setTask] = useState<TaskType>();
   const [showStartDate, setShowStartDate] = useState(false);
   const { addUserTask } = useUserTasksStore();
@@ -37,14 +32,18 @@ export default function TaskDetails({
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <IconButton icon="check" iconColor="#fff" onPress={() => navigation.navigate('Tasks')} />
+        <IconButton
+          icon="check"
+          iconColor="#fff"
+          onPress={() => navigation.navigate('TasksMain', { screen: 'Tasks' })}
+        />
       ),
     });
   }, [navigation]);
 
   // Methods
   const loadData = async () => {
-    const selectedTask: TaskType = TASKS.find((t: TaskType) => t.id === id) as TaskType;
+    const selectedTask: TaskType = taskInit;
 
     setTask({
       id: selectedTask.id,
@@ -68,7 +67,7 @@ export default function TaskDetails({
   const handleSaveTask = async () => {
     try {
       addUserTask(task as TaskType);
-      navigation.navigate('Tasks');
+      navigation.navigate('TasksMain', { screen: 'Tasks' });
     } catch (e) {
       alert('error');
     }

@@ -5,14 +5,11 @@ import { Searchbar } from 'react-native-paper';
 
 import Task from '../components/Task';
 import { TASKS } from '../fixtures';
-import { TasksStackParams } from '../pages/navigation';
+import { StackParams } from '../pages/navigation';
 import { colors, globalStyles } from '../styles';
 import { TaskType } from '../types';
 
-export default function SearchTasks({
-  navigation,
-  route,
-}: NativeStackScreenProps<TasksStackParams>) {
+export default function SearchTasks({ navigation, route }: NativeStackScreenProps<StackParams>) {
   const [searchQuery, setSearchQuery] = useState('');
 
   const onChangeSearch = (query: string) => setSearchQuery(query);

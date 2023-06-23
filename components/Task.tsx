@@ -3,7 +3,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { StyleSheet, Text, View, ImageBackground } from 'react-native';
 import { Badge, Card } from 'react-native-paper';
 
-import { TasksStackParams } from '../pages/navigation';
+import { StackParams } from '../pages/navigation';
 import { colors, globalStyles, categories } from '../styles';
 import { TaskType } from '../types/TaskType';
 
@@ -12,10 +12,12 @@ type TaskProps = {
 };
 
 export default function ({ task }: TaskProps) {
-  const navigation = useNavigation<StackNavigationProp<TasksStackParams>>();
+  const navigation = useNavigation<StackNavigationProp<StackParams>>();
 
   return (
-    <Card style={styles.task} onPress={() => navigation.navigate('TaskDetails', { id: task.id })}>
+    <Card
+      style={styles.task}
+      onPress={() => navigation.navigate('TasksMain', { screen: 'EditTask', params: { task } })}>
       <View
         style={{
           flexDirection: 'row',

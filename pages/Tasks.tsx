@@ -1,14 +1,13 @@
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
 import { FAB } from 'react-native-paper';
 
-import { TasksStackParams } from './navigation';
+import { TasksTabScreenProps } from './navigation';
 import Task from '../components/Task';
 import { useUserTasksStore } from '../hooks/useUserTasksStore';
 import { colors, globalStyles } from '../styles';
 import { TaskType } from '../types';
 
-export default function Tasks({ navigation }: NativeStackScreenProps<TasksStackParams>) {
+export default function Tasks({ navigation }: TasksTabScreenProps<'Tasks'>) {
   // Hooks
   const { userTasks } = useUserTasksStore();
   console.log({ userTasks });
@@ -27,7 +26,11 @@ export default function Tasks({ navigation }: NativeStackScreenProps<TasksStackP
         </SafeAreaView>
       </ScrollView>
 
-      <FAB icon="plus" style={styles.fab} onPress={() => navigation.navigate('SearchTasks')} />
+      <FAB
+        icon="plus"
+        style={styles.fab}
+        onPress={() => navigation.navigate('TasksMain', { screen: 'SearchTasks' })}
+      />
     </View>
   );
 }
