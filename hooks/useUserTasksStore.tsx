@@ -8,6 +8,7 @@ interface UserTasksStoreState {
   userTasks: TaskType[];
   _hasHydrated: boolean;
   addUserTask(task: TaskType): void;
+  deleteUserTask(task: TaskType): void;
   completeTask(task: TaskType): void;
   uncompleteTask(task: TaskType): void;
 }
@@ -18,7 +19,22 @@ export const useUserTasksStore = create(
       (set, get) => ({
         userTasks: [],
         _hasHydrated: false,
-        addUserTask: (task: TaskType) => set({ userTasks: [...get().userTasks, task] }),
+        addUserTask: (task: TaskType) => {
+          const userTasks = [...get().userTasks];
+          const existingTask = userTasks.findIndex((t) => t.id === task.id) >= 0;
+
+          if (existingTask) {
+            const otherTasks = userTasks.filter((t) => t.id !== task.id);
+            set({ userTasks: [...otherTasks, task] });
+          } else {
+            set({ userTasks: [...userTasks, task] });
+          }
+        },
+        deleteUserTask: (task: TaskType) => {
+          const remainingTasks = [...get().userTasks].filter((t) => t.id !== task.id);
+          set({ userTasks: [...remainingTasks] });
+          // AsyncStorage.clear();
+        },
         completeTask: (task: TaskType) => {
           const completedTask = {
             ...task,
@@ -30,7 +46,6 @@ export const useUserTasksStore = create(
             1
           );
           set({ userTasks: [...existingTasks, completedTask] });
-          // AsyncStorage.clear();
         },
         uncompleteTask: (task: TaskType) => {
           const uncompletedTask = { ...task };

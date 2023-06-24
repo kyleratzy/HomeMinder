@@ -29,6 +29,21 @@ export const dueThisWeek = (task: TaskType) => {
   });
 };
 
+export const doneThisWeek = (task: TaskType) => {
+  const lastCheckin: string | undefined = task.checkins
+    ? task.checkins[task.checkins.length - 1]
+    : undefined;
+
+  if (!lastCheckin) {
+    return false;
+  }
+
+  return isWithinInterval(parseISO(lastCheckin), {
+    start: startOfCurrentWeek,
+    end: endOfCurrentWeek,
+  });
+};
+
 export const dueThisMonth = (task: TaskType) => {
   const lastCheckin: string | undefined = task.checkins
     ? task.checkins[task.checkins.length - 1]

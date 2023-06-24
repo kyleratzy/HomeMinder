@@ -2,7 +2,7 @@ import { StyleSheet, View, ImageBackground } from 'react-native';
 import { Text } from 'react-native-paper';
 
 import TaskCheckbox from '../components/TaskCheckbox';
-import { dueThisWeek, dueThisMonth } from '../helpers/dates';
+import { dueThisWeek, doneThisWeek } from '../helpers/dates';
 import { useUserTasksStore } from '../hooks/useUserTasksStore';
 import { globalStyles } from '../styles';
 import { TaskType } from '../types';
@@ -27,9 +27,7 @@ export default function Home() {
         {userTasks.filter(dueThisWeek).map((task: TaskType) => (
           <TaskCheckbox task={task} key={task.id} />
         ))}
-
-        <Text style={globalStyles.h3}>This Months's Tasks</Text>
-        {userTasks.filter(dueThisMonth).map((task: TaskType) => (
+        {userTasks.filter(doneThisWeek).map((task: TaskType) => (
           <TaskCheckbox task={task} key={task.id} />
         ))}
       </View>

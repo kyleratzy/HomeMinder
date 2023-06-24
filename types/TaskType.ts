@@ -5,6 +5,7 @@ export type TaskType = {
   name: string;
   notes: string;
   category: string;
+  importance: 'high' | 'medium' | 'low';
   image: ImageSourcePropType;
   startDate: string;
   frequency: string;

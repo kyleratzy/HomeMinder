@@ -69,6 +69,7 @@ const Tab = createMaterialBottomTabNavigator<RootStackParams>();
 const HomeStackNavigator = () => {
   return (
     <HomeStack.Navigator
+      initialRouteName="Home"
       screenOptions={{
         headerStyle: {
           backgroundColor: colors.primary,
@@ -100,7 +101,7 @@ const TasksStackNavigator = () => {
         name="EditTask"
         component={EditTask}
         options={{
-          title: 'Task Details',
+          title: 'Edit Task',
           headerRight: () => <IconButton icon="check" iconColor="#fff" />, // Add a placeholder button without the `onPress` to avoid flicker
         }}
       />
@@ -140,6 +141,12 @@ export function Tabs() {
           title: 'Home',
           tabBarIcon: ({ color }) => <MaterialCommunityIcons name="home" color={color} size={30} />,
         }}
+        listeners={({ navigation, route }) => ({
+          tabPress: (e) => {
+            e.preventDefault();
+            navigation.navigate('HomeMain', { screen: 'Home' });
+          },
+        })}
       />
       <Tab.Screen
         name="TasksMain"
@@ -150,6 +157,12 @@ export function Tabs() {
             <MaterialCommunityIcons name="format-list-checkbox" color={color} size={30} />
           ),
         }}
+        listeners={({ navigation, route }) => ({
+          tabPress: (e) => {
+            e.preventDefault();
+            navigation.navigate('TasksMain', { screen: 'Tasks' });
+          },
+        })}
       />
       <Tab.Screen
         name="ProfileMain"
@@ -160,6 +173,12 @@ export function Tabs() {
             <MaterialCommunityIcons name="account-cog" color={color} size={30} />
           ),
         }}
+        listeners={({ navigation, route }) => ({
+          tabPress: (e) => {
+            e.preventDefault();
+            navigation.navigate('ProfileMain', { screen: 'Profile' });
+          },
+        })}
       />
     </Tab.Navigator>
   );

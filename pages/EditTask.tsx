@@ -21,13 +21,9 @@ import { TaskType } from '../types';
 
 export default function EditTask({ route, navigation }: TasksTabScreenProps<'EditTask'>) {
   const taskInit = route.params.task;
-  const [task, setTask] = useState<TaskType>();
+  const [task, setTask] = useState<TaskType>({ ...taskInit });
   const [showStartDate, setShowStartDate] = useState(false);
-  const { addUserTask } = useUserTasksStore();
-
-  useEffect(() => {
-    loadData();
-  }, []);
+  const { addUserTask, deleteUserTask } = useUserTasksStore();
 
   useEffect(() => {
     navigation.setOptions({
@@ -42,21 +38,6 @@ export default function EditTask({ route, navigation }: TasksTabScreenProps<'Edi
   }, [navigation]);
 
   // Methods
-  const loadData = async () => {
-    const selectedTask: TaskType = taskInit;
-
-    setTask({
-      id: selectedTask.id,
-      name: selectedTask.name,
-      notes: '',
-      image: selectedTask.image,
-      category: selectedTask.category,
-      startDate: new Date().toISOString(),
-      frequency: '1',
-      interval: 'days',
-    });
-  };
-
   const onChangeDate = (event: DateTimePickerEvent, selectedDate: Date | undefined) => {
     setShowStartDate(false);
     if (selectedDate) {
@@ -64,9 +45,27 @@ export default function EditTask({ route, navigation }: TasksTabScreenProps<'Edi
     }
   };
 
+  // TODO: Validation for frequency change
+  const handleSetInterval = (value: string) => {
+    if (value === 'days' && Number(task?.frequency) < 7) {
+      setTask({ ...(task as TaskType), interval: value, frequency: '7' });
+    } else {
+      setTask({ ...(task as TaskType), interval: value });
+    }
+  };
+
   const handleSaveTask = async () => {
     try {
       addUserTask(task as TaskType);
+      navigation.navigate('TasksMain', { screen: 'Tasks' });
+    } catch (e) {
+      alert('error');
+    }
+  };
+
+  const handleDeleteTask = async () => {
+    try {
+      deleteUserTask(task as TaskType);
       navigation.navigate('TasksMain', { screen: 'Tasks' });
     } catch (e) {
       alert('error');
@@ -103,7 +102,7 @@ export default function EditTask({ route, navigation }: TasksTabScreenProps<'Edi
 
                 <View style={{ ...globalStyles.sideBySide, marginBottom: 16 }}>
                   <Text style={globalStyles.label}>Every:</Text>
-                  <View style={{ flexDirection: 'row', flexBasis: 160 }}>
+                  <View style={{ flexDirection: 'row', flexBasis: 170 }}>
                     <TextInput
                       keyboardType="numeric"
                       value={task.frequency}
@@ -126,7 +125,7 @@ export default function EditTask({ route, navigation }: TasksTabScreenProps<'Edi
                       labelField="label"
                       valueField="value"
                       value={task.interval}
-                      onChange={({ value }) => setTask({ ...task, interval: value })}
+                      onChange={({ value }) => handleSetInterval(value)}
                     />
                   </View>
                 </View>
@@ -171,8 +170,11 @@ export default function EditTask({ route, navigation }: TasksTabScreenProps<'Edi
               </View>
             </Card>
 
-            <Button mode="contained" onPress={handleSaveTask}>
+            <Button mode="contained" onPress={handleSaveTask} style={{ marginBottom: 20 }}>
               Save
+            </Button>
+            <Button mode="outlined" onPress={handleDeleteTask}>
+              Delete
             </Button>
           </View>
         )}
