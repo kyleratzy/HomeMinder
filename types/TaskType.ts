@@ -11,5 +11,6 @@ export type TaskType = {
   frequency: string;
   interval: string;
   checkins?: string[];
+  nextDate?: string;
   instructions?: any[];
 };

@@ -21,7 +21,7 @@ import { TaskType } from '../types';
 
 export default function EditTask({ route, navigation }: TasksTabScreenProps<'EditTask'>) {
   const taskInit = route.params.task;
-  const [task, setTask] = useState<TaskType>({ ...taskInit });
+  const [task, setTask] = useState<TaskType>({ ...taskInit, startDate: new Date().toISOString() });
   const [showStartDate, setShowStartDate] = useState(false);
   const { addUserTask, deleteUserTask } = useUserTasksStore();
 
@@ -102,7 +102,7 @@ export default function EditTask({ route, navigation }: TasksTabScreenProps<'Edi
 
                 <View style={{ ...globalStyles.sideBySide, marginBottom: 16 }}>
                   <Text style={globalStyles.label}>Every:</Text>
-                  <View style={{ flexDirection: 'row', flexBasis: 170 }}>
+                  <View style={{ flexDirection: 'row', flexBasis: 180 }}>
                     <TextInput
                       keyboardType="numeric"
                       value={task.frequency}

@@ -9,8 +9,9 @@ const globalStyles = StyleSheet.create({
   },
   label: {
     color: colors.text,
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'bold',
+    letterSpacing: 1,
   },
   h1: {
     fontSize: 32,
@@ -24,6 +25,11 @@ const globalStyles = StyleSheet.create({
   },
   h3: {
     fontSize: 24,
+    fontWeight: '300',
+    marginBottom: 4,
+  },
+  h4: {
+    fontSize: 20,
     fontWeight: '300',
     marginBottom: 4,
   },

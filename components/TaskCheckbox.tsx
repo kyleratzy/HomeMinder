@@ -1,9 +1,9 @@
 import { useNavigation } from '@react-navigation/native';
 import { isWithinInterval, parseISO } from 'date-fns';
 import { StyleSheet, Text, View } from 'react-native';
-import { Card, Checkbox } from 'react-native-paper';
+import { Card, Checkbox, useTheme } from 'react-native-paper';
 
-import { startOfCurrentWeek, endOfCurrentWeek } from '../helpers/dates';
+import { startOfCurrentWeek, endOfCurrentWeek, overdue } from '../helpers/dates';
 import { useUserTasksStore } from '../hooks/useUserTasksStore';
 import { globalStyles } from '../styles';
 import { TaskType } from '../types/TaskType';
@@ -15,6 +15,7 @@ type TaskProps = {
 export default function ({ task }: TaskProps) {
   const { completeTask, uncompleteTask } = useUserTasksStore();
   const navigation = useNavigation();
+  const theme = useTheme();
 
   // Methods
   const isChecked = () => {
@@ -39,11 +40,17 @@ export default function ({ task }: TaskProps) {
   };
 
   return (
-    <Card style={styles.task}>
+    <Card
+      style={{
+        ...styles.task,
+        borderLeftColor: theme.colors.error,
+        borderLeftWidth: overdue(task) ? 6 : 0,
+      }}>
       <View
         style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
+          alignItems: 'center',
           width: '100%',
         }}>
         <View style={{ flexBasis: 40 }}>
@@ -52,7 +59,7 @@ export default function ({ task }: TaskProps) {
         <Text
           onPress={() => navigation.navigate('TasksMain', { screen: 'ViewTask', params: { task } })}
           style={{
-            ...globalStyles.h3,
+            ...globalStyles.h4,
             flexGrow: 1,
             textDecorationLine: checked ? 'line-through' : 'none',
           }}>
