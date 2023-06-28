@@ -19,7 +19,7 @@ export default function ({ task }: TaskProps) {
 
   // Methods
   const isChecked = () => {
-    if (!task.checkins) {
+    if (!task.checkins.length) {
       return false;
     }
     const lastCheckin = task.checkins[task.checkins.length - 1];
@@ -54,14 +54,13 @@ export default function ({ task }: TaskProps) {
           width: '100%',
         }}>
         <View style={{ flexBasis: 40 }}>
-          <Checkbox status={checked ? 'checked' : 'unchecked'} onPress={handleCheck} />
+          <Checkbox status="unchecked" onPress={handleCheck} />
         </View>
         <Text
           onPress={() => navigation.navigate('TasksMain', { screen: 'ViewTask', params: { task } })}
           style={{
             ...globalStyles.h4,
             flexGrow: 1,
-            textDecorationLine: checked ? 'line-through' : 'none',
           }}>
           {task.name}
         </Text>

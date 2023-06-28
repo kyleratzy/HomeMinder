@@ -8,10 +8,10 @@ const globalStyles = StyleSheet.create({
     fontSize: 16,
   },
   label: {
-    color: colors.text,
+    color: colors.textLighter,
     fontSize: 14,
     fontWeight: 'bold',
-    letterSpacing: 1,
+    letterSpacing: 2,
   },
   h1: {
     fontSize: 32,
@@ -38,7 +38,7 @@ const globalStyles = StyleSheet.create({
     flexGrow: 1,
   },
   container: {
-    paddingHorizontal: 16,
+    padding: 16,
   },
   card: {
     backgroundColor: '#fff',

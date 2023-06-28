@@ -21,7 +21,7 @@ export default function SearchTasks({ navigation, route }: TasksTabScreenProps<'
   };
 
   return (
-    <View style={{ ...globalStyles.pageWrapper, paddingTop: 32 }}>
+    <View style={{ ...globalStyles.pageWrapper, paddingTop: 16 }}>
       <View style={{ ...globalStyles.container }}>
         <Searchbar
           placeholder="e.g. clean gutters..."
@@ -49,8 +49,9 @@ export default function SearchTasks({ navigation, route }: TasksTabScreenProps<'
 
 const styles = StyleSheet.create({
   list: {
-    paddingVertical: 32,
+    paddingVertical: 16,
     flexGrow: 1,
+    marginBottom: 80,
   },
   task: {
     marginBottom: 16,

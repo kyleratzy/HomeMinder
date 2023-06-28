@@ -15,9 +15,7 @@ export const startOfCurrentWeek = startOfWeek(new Date());
 export const endOfCurrentWeek = endOfWeek(new Date());
 
 export const getNextDate = (task: TaskType) => {
-  const lastCheckin: string | undefined = task.checkins
-    ? task.checkins[task.checkins.length - 1]
-    : undefined;
+  const lastCheckin: string | undefined = task.checkins[task.checkins.length - 1];
 
   return lastCheckin
     ? add(parseISO(lastCheckin), {
@@ -50,6 +48,10 @@ export const dueThisWeek = (task: TaskType) => {
     start: startOfCurrentWeek,
     end: endOfCurrentWeek,
   });
+};
+
+export const dueInTheFuture = (task: TaskType) => {
+  return isFuture(endOfDay(parseISO(getNextDate(task)))) && !dueThisWeek(task);
 };
 
 export const doneThisWeek = (task: TaskType) => {

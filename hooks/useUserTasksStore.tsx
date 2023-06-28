@@ -45,6 +45,7 @@ export const useUserTasksStore = create(
             existingTasks.findIndex((t: TaskType) => t.id === task.id),
             1
           );
+          console.log(completedTask);
           set({ userTasks: [...existingTasks, completedTask] });
         },
         uncompleteTask: (task: TaskType) => {

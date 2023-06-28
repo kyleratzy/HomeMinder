@@ -1,12 +1,15 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { CompositeScreenProps } from '@react-navigation/core';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { NavigatorScreenParams } from '@react-navigation/native';
 import { createStackNavigator, StackScreenProps } from '@react-navigation/stack';
+import { StyleSheet, View, Text, ImageBackground } from 'react-native';
 import { IconButton } from 'react-native-paper';
 
 import EditTask from './EditTask';
-import Home from './Home';
+import HomeCompleted from './HomeCompleted';
+import HomeUpcoming from './HomeUpcoming';
 import Profile from './Profile';
 import SearchTasks from './SearchTasks';
 import Tasks from './Tasks';
@@ -21,7 +24,8 @@ declare global {
 }
 
 export type HomeStackParams = {
-  Home: undefined;
+  HomeUpcoming: undefined;
+  HomeCompleted: undefined;
 };
 
 export type TasksStackParams = {
@@ -61,23 +65,36 @@ export type ProfileTabScreenProps<T extends keyof ProfileStackParams> = Composit
   RootStackScreenProps<keyof RootStackParams>
 >;
 
-const HomeStack = createStackNavigator<HomeStackParams>();
+const image = {
+  uri: 'https://www.bhg.com/thmb/3Vf9GXp3T-adDlU6tKpTbb-AEyE=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/white-modern-house-curved-patio-archway-c0a4a3b3-aa51b24d14d0464ea15d36e05aa85ac9.jpg',
+};
+
+const HomeStack = createMaterialTopTabNavigator<HomeStackParams>();
 const TasksStack = createStackNavigator<TasksStackParams>();
 const ProfileStack = createStackNavigator<ProfileStackParams>();
 const Tab = createMaterialBottomTabNavigator<RootStackParams>();
 
 const HomeStackNavigator = () => {
   return (
-    <HomeStack.Navigator
-      initialRouteName="Home"
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: colors.primary,
-        },
-        headerTintColor: '#fff',
-      }}>
-      <HomeStack.Screen name="Home" component={Home} />
-    </HomeStack.Navigator>
+    <>
+      <ImageBackground source={image} resizeMode="cover">
+        <View style={styles.banner}>
+          <Text style={styles.banner_text}>Welcome Kyle!</Text>
+        </View>
+      </ImageBackground>
+      <HomeStack.Navigator initialRouteName="HomeUpcoming">
+        <HomeStack.Screen
+          name="HomeUpcoming"
+          component={HomeUpcoming}
+          options={{ title: 'Upcoming Tasks' }}
+        />
+        <HomeStack.Screen
+          name="HomeCompleted"
+          component={HomeCompleted}
+          options={{ title: 'Completed Tasks' }}
+        />
+      </HomeStack.Navigator>
+    </>
   );
 };
 
@@ -183,3 +200,15 @@ export function Tabs() {
     </Tab.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  banner: {
+    height: 200,
+    justifyContent: 'flex-end',
+  },
+  banner_text: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+});

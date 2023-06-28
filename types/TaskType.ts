@@ -10,7 +10,7 @@ export type TaskType = {
   startDate: string;
   frequency: string;
   interval: string;
-  checkins?: string[];
+  checkins: string[];
   nextDate?: string;
   instructions?: any[];
 };

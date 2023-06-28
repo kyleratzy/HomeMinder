@@ -13,6 +13,7 @@ export const TASKS: TaskType[] = [
     importance: 'medium',
     frequency: '1',
     interval: 'days',
+    checkins: [],
   },
   {
     id: 2,
@@ -26,6 +27,7 @@ export const TASKS: TaskType[] = [
     importance: 'low',
     frequency: '1',
     interval: 'days',
+    checkins: [],
   },
   {
     id: 3,
@@ -39,6 +41,7 @@ export const TASKS: TaskType[] = [
     importance: 'high',
     frequency: '1',
     interval: 'days',
+    checkins: [],
   },
   {
     id: 4,
@@ -52,6 +55,7 @@ export const TASKS: TaskType[] = [
     importance: 'low',
     frequency: '1',
     interval: 'days',
+    checkins: [],
   },
   {
     id: 5,
@@ -65,6 +69,7 @@ export const TASKS: TaskType[] = [
     importance: 'medium',
     frequency: '1',
     interval: 'days',
+    checkins: [],
   },
   {
     id: 6,
@@ -78,6 +83,7 @@ export const TASKS: TaskType[] = [
     importance: 'medium',
     interval: '1',
     frequency: 'days',
+    checkins: [],
   },
   {
     id: 7,
@@ -91,6 +97,7 @@ export const TASKS: TaskType[] = [
     importance: 'medium',
     frequency: '1',
     interval: 'days',
+    checkins: [],
   },
   {
     id: 8,
@@ -104,6 +111,7 @@ export const TASKS: TaskType[] = [
     importance: 'low',
     frequency: '1',
     interval: 'days',
+    checkins: [],
   },
   {
     id: 9,
@@ -117,6 +125,7 @@ export const TASKS: TaskType[] = [
     importance: 'low',
     frequency: '1',
     interval: 'days',
+    checkins: [],
   },
 ];
 
