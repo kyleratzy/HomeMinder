@@ -14,6 +14,8 @@ import Profile from './Profile';
 import SearchTasks from './SearchTasks';
 import Tasks from './Tasks';
 import ViewTask from './ViewTask';
+import { overdue, mapNextDates } from '../helpers/dates';
+import { useUserTasksStore } from '../hooks/useUserTasksStore';
 import { colors } from '../styles';
 import { TaskType } from '../types/TaskType';
 
@@ -75,23 +77,45 @@ const ProfileStack = createStackNavigator<ProfileStackParams>();
 const Tab = createMaterialBottomTabNavigator<RootStackParams>();
 
 const HomeStackNavigator = () => {
+  const { userTasks }: { userTasks: TaskType[] } = useUserTasksStore();
+  const overdueTasks = userTasks.map(mapNextDates).filter(overdue);
+
   return (
     <>
-      <ImageBackground source={image} resizeMode="cover">
-        <View style={styles.banner}>
-          <Text style={styles.banner_text}>Welcome Kyle!</Text>
-        </View>
-      </ImageBackground>
+      <View style={{ paddingTop: 40, backgroundColor: 'tomato' }}>
+        <ImageBackground source={image} resizeMode="cover">
+          <View style={styles.banner}>
+            {/* <Text style={styles.banner_text}>Welcome Kyle!</Text> */}
+          </View>
+        </ImageBackground>
+      </View>
       <HomeStack.Navigator initialRouteName="HomeUpcoming">
         <HomeStack.Screen
           name="HomeUpcoming"
           component={HomeUpcoming}
-          options={{ title: 'Upcoming Tasks' }}
+          options={{
+            title: 'ToDo',
+            tabBarBadge: () =>
+              overdueTasks.length ? (
+                <Text
+                  style={{
+                    backgroundColor: 'tomato',
+                    padding: 2,
+                    borderRadius: 20,
+                    minWidth: 23,
+                    textAlign: 'center',
+                    color: '#fff',
+                    top: 4,
+                  }}>
+                  {overdueTasks.length}
+                </Text>
+              ) : null,
+          }}
         />
         <HomeStack.Screen
           name="HomeCompleted"
           component={HomeCompleted}
-          options={{ title: 'Completed Tasks' }}
+          options={{ title: 'Completed' }}
         />
       </HomeStack.Navigator>
     </>
