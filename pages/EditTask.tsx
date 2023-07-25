@@ -21,8 +21,7 @@ import { TaskType } from '../types';
 
 export default function EditTask({ route, navigation }: TasksTabScreenProps<'EditTask'>) {
   const taskInit = route.params.task;
-  const [task, setTask] = useState<TaskType>({ ...taskInit, startDate: new Date().toISOString() });
-  const [showStartDate, setShowStartDate] = useState(false);
+  const [task, setTask] = useState<TaskType>({ ...taskInit });
   const { addUserTask, deleteUserTask } = useUserTasksStore();
 
   useEffect(() => {
@@ -36,14 +35,6 @@ export default function EditTask({ route, navigation }: TasksTabScreenProps<'Edi
       ),
     });
   }, [navigation]);
-
-  // Methods
-  const onChangeDate = (event: DateTimePickerEvent, selectedDate: Date | undefined) => {
-    setShowStartDate(false);
-    if (selectedDate) {
-      setTask({ ...(task as TaskType), startDate: selectedDate.toISOString() });
-    }
-  };
 
   // TODO: Validation for frequency change
   const handleSetInterval = (value: string) => {
@@ -128,30 +119,6 @@ export default function EditTask({ route, navigation }: TasksTabScreenProps<'Edi
                       onChange={({ value }) => handleSetInterval(value)}
                     />
                   </View>
-                </View>
-
-                <View style={{ ...globalStyles.sideBySide, marginBottom: 24 }}>
-                  <Text style={globalStyles.label}>Start On:</Text>
-                  <Text
-                    style={{
-                      paddingVertical: 16,
-                      borderBottomColor: DefaultTheme.colors.primary,
-                      borderBottomWidth: 0.5,
-                      textAlign: 'center',
-                      flexBasis: 100,
-                      backgroundColor: DefaultTheme.colors.surfaceVariant,
-                    }}
-                    onPress={() => setShowStartDate(true)}>
-                    {format(parseISO(task.startDate), 'MM/dd/yyyy')}
-                  </Text>
-
-                  {showStartDate && (
-                    <DateTimePicker
-                      value={parseISO(task.startDate)}
-                      mode="date"
-                      onChange={onChangeDate}
-                    />
-                  )}
                 </View>
 
                 <View>

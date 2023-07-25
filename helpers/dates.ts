@@ -15,13 +15,15 @@ export const startOfCurrentWeek = startOfWeek(new Date());
 export const endOfCurrentWeek = endOfWeek(new Date());
 
 export const getNextDate = (task: TaskType) => {
-  const lastCheckin: string | undefined = task.checkins[task.checkins.length - 1];
+  const last = lastCheckin(task);
 
-  return lastCheckin
-    ? add(parseISO(lastCheckin), {
-        [task.interval]: task.frequency,
-      }).toISOString()
-    : task.startDate;
+  if (last) {
+    return add(parseISO(last), {
+      [task.interval]: task.frequency,
+    }).toISOString();
+  } else {
+    return new Date().toISOString();
+  }
 };
 
 export const mapNextDates = (task: TaskType) => {
@@ -44,10 +46,13 @@ export const upcoming = (task: TaskType) => {
 };
 
 export const dueThisWeek = (task: TaskType) => {
-  return isWithinInterval(parseISO(getNextDate(task)), {
-    start: startOfCurrentWeek,
-    end: endOfCurrentWeek,
-  });
+  return (
+    getNextDate(task) === undefined ||
+    isWithinInterval(parseISO(getNextDate(task)), {
+      start: startOfCurrentWeek,
+      end: endOfCurrentWeek,
+    })
+  );
 };
 
 export const dueInTheFuture = (task: TaskType) => {
@@ -67,4 +72,8 @@ export const doneThisWeek = (task: TaskType) => {
     start: startOfCurrentWeek,
     end: endOfCurrentWeek,
   });
+};
+
+export const lastCheckin = (task: TaskType): string | undefined => {
+  return task.checkins[task.checkins.length - 1];
 };

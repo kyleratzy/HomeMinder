@@ -7,7 +7,6 @@ export type TaskType = {
   category: string;
   importance: 'high' | 'medium' | 'low';
   image: ImageSourcePropType;
-  startDate: string;
   frequency: string;
   interval: string;
   checkins: string[];

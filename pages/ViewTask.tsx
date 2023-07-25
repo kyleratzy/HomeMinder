@@ -27,7 +27,7 @@ export default function ViewTask({ route, navigation }: TasksTabScreenProps<'Vie
   const handleCompleteTask = async () => {
     try {
       completeTask(task as TaskType);
-      navigation.navigate('HomeMain', { screen: 'Home' });
+      navigation.navigate('HomeMain', { screen: 'HomeUpcoming' });
     } catch (e) {
       alert('error');
     }
@@ -67,11 +67,6 @@ export default function ViewTask({ route, navigation }: TasksTabScreenProps<'Vie
                     <Text>{task.frequency}</Text>
                     <Text>{task.interval}</Text>
                   </View>
-                </View>
-
-                <View style={{ ...globalStyles.sideBySide, marginBottom: 24 }}>
-                  <Text style={globalStyles.label}>Start On:</Text>
-                  <Text>{task.startDate}</Text>
                 </View>
 
                 <View>
