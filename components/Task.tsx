@@ -7,15 +7,22 @@ import { TaskType } from '../types/TaskType';
 
 type TaskProps = {
   task: TaskType;
+  compact?: boolean;
+  editable?: boolean;
 };
 
-export default function ({ task }: TaskProps) {
+export default function ({ task, compact, editable }: TaskProps) {
   const navigation = useNavigation();
 
   return (
     <Card
       style={styles.task}
-      onPress={() => navigation.navigate('TasksMain', { screen: 'EditTask', params: { task } })}>
+      onPress={() =>
+        navigation.navigate('TasksMain', {
+          screen: editable ? 'EditTask' : 'ViewTask',
+          params: { task },
+        })
+      }>
       <View
         style={{
           flexDirection: 'row',
@@ -23,7 +30,7 @@ export default function ({ task }: TaskProps) {
           width: '100%',
         }}>
         <ImageBackground source={task?.image} resizeMode="cover">
-          <View style={styles.task_image} />
+          <View style={[compact ? styles.task_image_compact : styles.task_image]} />
         </ImageBackground>
         <View style={styles.task_content}>
           <Text style={globalStyles.h3}>{task.name}</Text>
@@ -35,9 +42,11 @@ export default function ({ task }: TaskProps) {
             }}>
             {task.category.toUpperCase()}
           </Badge>
-          <Text numberOfLines={1} ellipsizeMode="tail" style={styles.task_description}>
-            {task.notes}
-          </Text>
+          {!compact && (
+            <Text numberOfLines={1} ellipsizeMode="tail" style={styles.task_description}>
+              {task.notes}
+            </Text>
+          )}
         </View>
       </View>
     </Card>
@@ -60,7 +69,10 @@ const styles = StyleSheet.create({
   task_image: {
     height: 80,
     width: 80,
-    borderRadius: 16,
+  },
+  task_image_compact: {
+    height: 0,
+    width: 0,
   },
   task_content: {
     flexGrow: 1,

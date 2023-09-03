@@ -1,5 +1,5 @@
 import { format, parseISO } from 'date-fns';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import { Text } from 'react-native-paper';
 
 import TaskCheckbox from '../components/TaskCheckbox';
@@ -18,7 +18,7 @@ export default function HomeCompleted() {
   return (
     <View style={globalStyles.container}>
       {completeTasks.map((task: TaskType, i: number) => (
-        <View key={task.id}>
+        <View key={task.id + i.toString()}>
           <Text style={{ ...globalStyles.label, marginBottom: 6 }}>
             {format(parseISO(task.checkins[0]), 'M/dd/yy')}
           </Text>
@@ -29,5 +29,3 @@ export default function HomeCompleted() {
     </View>
   );
 }
-
-

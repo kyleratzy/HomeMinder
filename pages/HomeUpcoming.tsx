@@ -1,8 +1,8 @@
 import { format, isSameDay, parseISO } from 'date-fns';
-import { useState } from 'react';
 import { View, SafeAreaView, ScrollView, StyleSheet } from 'react-native';
-import { Text, Card, Switch, useTheme } from 'react-native-paper';
+import { Text, Card, useTheme } from 'react-native-paper';
 
+import Task from '../components/Task';
 import TaskCheckbox from '../components/TaskCheckbox';
 import {
   dueThisWeek,
@@ -16,8 +16,6 @@ import { globalStyles } from '../styles';
 import { TaskType } from '../types';
 
 export default function HomeUpcoming() {
-  const [showMore, setShowMore] = useState(false);
-
   // Hooks
   const { userTasks }: { userTasks: TaskType[] } = useUserTasksStore();
   const theme = useTheme();
@@ -29,71 +27,78 @@ export default function HomeUpcoming() {
 
   return (
     <View>
-      <View
-        style={{
-          ...globalStyles.sideBySide,
-          ...globalStyles.container,
-          paddingTop: 16,
-        }}>
-        <Text style={{ ...globalStyles.h2, letterSpacing: 3, marginBottom: 0 }}>
-          {showMore ? 'ALL TASKS' : 'THIS WEEK'}
-        </Text>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Text style={{ ...globalStyles.label, marginRight: 4 }}>Show All</Text>
-          <Switch value={showMore} onValueChange={() => setShowMore(!showMore)} />
-        </View>
-      </View>
-
       <ScrollView alwaysBounceVertical fadingEdgeLength={200} style={styles.list}>
         <SafeAreaView style={globalStyles.container}>
-          {overdueTasks.length === 0 && dueThisWeekTasks.length === 0 && !showMore && (
-            <Card style={{ ...globalStyles.card, padding: 16, alignItems: 'center' }}>
-              <Text style={globalStyles.label}>No Tasks due</Text>
-            </Card>
-          )}
-
-          {overdueTasks.length > 0 && (
-            <Text style={{ ...globalStyles.label, color: theme.colors.error, marginBottom: 6 }}>
-              Overdue
+          <View style={{ paddingBottom: 32 }}>
+            <Text
+              style={{
+                ...globalStyles.h5,
+                letterSpacing: 2,
+                marginBottom: 16,
+                textAlign: 'center',
+                width: '100%',
+                textTransform: 'uppercase',
+              }}>
+              This Week
             </Text>
-          )}
-          {overdueTasks.map((task: TaskType, i: number) => (
-            <TaskCheckbox task={task} key={task.id} />
-          ))}
-          {dueThisWeekTasks.map((task: TaskType, i: number) => (
-            <View key={task.id} style={{ paddingBottom: 16 }}>
-              {(i === 0 ||
-                !isSameDay(
-                  parseISO(task?.nextDate as string),
-                  parseISO(dueThisWeekTasks[i === 0 ? 0 : i - 1].nextDate as string)
-                )) && (
-                <Text style={{ ...globalStyles.label, marginBottom: 6 }}>
-                  {format(parseISO(task.nextDate as string), 'EEEE')}
-                </Text>
-              )}
+            {overdueTasks.length === 0 && dueThisWeekTasks.length === 0 && (
+              <Card style={{ ...globalStyles.card, padding: 16, alignItems: 'center' }}>
+                <Text style={globalStyles.label}>no tasks due</Text>
+              </Card>
+            )}
+            {overdueTasks.length > 0 && (
+              <Text style={{ ...globalStyles.label, color: theme.colors.error, marginBottom: 6 }}>
+                Overdue
+              </Text>
+            )}
+            {overdueTasks.map((task: TaskType, i: number) => (
               <TaskCheckbox task={task} key={task.id} />
-            </View>
-          ))}
+            ))}
+            {dueThisWeekTasks.map((task: TaskType, i: number) => (
+              <View key={task.id}>
+                {(i === 0 ||
+                  !isSameDay(
+                    parseISO(task?.nextDate as string),
+                    parseISO(dueThisWeekTasks[i === 0 ? 0 : i - 1].nextDate as string)
+                  )) && (
+                  <Text style={{ ...globalStyles.label, marginBottom: 6 }}>
+                    {format(parseISO(task.nextDate as string), 'EEEE')}
+                  </Text>
+                )}
+                <TaskCheckbox task={task} key={task.id} />
+              </View>
+            ))}
+          </View>
 
-          {showMore && (
-            <View>
-              <Text style={{ ...globalStyles.label, textAlign: 'center' }}>...</Text>
-              {dueInTheFutureTasks.map((task: TaskType, i: number) => (
-                <View key={task.id}>
-                  {(i === 0 ||
-                    !isSameDay(
-                      parseISO(task?.nextDate as string),
-                      parseISO(dueInTheFutureTasks[i === 0 ? 0 : i - 1].nextDate as string)
-                    )) && (
-                    <Text style={{ ...globalStyles.label, marginBottom: 6 }}>
-                      {format(parseISO(task.nextDate as string), 'MMMM dd, yyyy')}
-                    </Text>
-                  )}
-                  <TaskCheckbox task={task} key={task.id} />
+          <View>
+            <Text
+              style={{
+                ...globalStyles.h5,
+                letterSpacing: 2,
+                marginBottom: 16,
+                textAlign: 'center',
+                width: '100%',
+                textTransform: 'uppercase',
+              }}>
+              Upcoming
+            </Text>
+            {dueInTheFutureTasks.map((task: TaskType, i: number) => (
+              <View key={task.id}>
+                {(i === 0 ||
+                  !isSameDay(
+                    parseISO(task?.nextDate as string),
+                    parseISO(dueInTheFutureTasks[i === 0 ? 0 : i - 1].nextDate as string)
+                  )) && (
+                  <Text style={{ ...globalStyles.label, marginBottom: 8 }}>
+                    {format(parseISO(task.nextDate as string), 'MMM d, yyyy')}
+                  </Text>
+                )}
+                <View style={{ paddingHorizontal: 16 }}>
+                  <Task task={task} compact />
                 </View>
-              ))}
-            </View>
-          )}
+              </View>
+            ))}
+          </View>
         </SafeAreaView>
       </ScrollView>
     </View>
@@ -103,6 +108,5 @@ export default function HomeUpcoming() {
 const styles = StyleSheet.create({
   list: {
     flexGrow: 1,
-    marginBottom: 80,
   },
 });

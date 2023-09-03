@@ -1,5 +1,3 @@
-import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
-import { format, parseISO } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View, ImageBackground, ScrollView } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
@@ -26,16 +24,11 @@ export default function EditTask({ route, navigation }: TasksTabScreenProps<'Edi
 
   useEffect(() => {
     navigation.setOptions({
-      headerRight: () => (
-        <IconButton
-          icon="check"
-          iconColor="#fff"
-          onPress={() => navigation.navigate('TasksMain', { screen: 'Tasks' })}
-        />
-      ),
+      headerRight: () => <></>,
     });
   }, [navigation]);
 
+  // Methods
   // TODO: Validation for frequency change
   const handleSetInterval = (value: string) => {
     if (value === 'days' && Number(task?.frequency) < 7) {

@@ -1,6 +1,8 @@
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { format, parseISO } from 'date-fns';
 import { useEffect } from 'react';
 import { StyleSheet, View, ImageBackground, ScrollView } from 'react-native';
-import { Button, IconButton, Card, Badge, Divider, Text } from 'react-native-paper';
+import { Button, IconButton, Card, Badge, Text } from 'react-native-paper';
 
 import { TasksTabScreenProps } from './navigation';
 import { useUserTasksStore } from '../hooks/useUserTasksStore';
@@ -8,29 +10,26 @@ import { globalStyles, categories } from '../styles';
 import { TaskType } from '../types';
 
 export default function ViewTask({ route, navigation }: TasksTabScreenProps<'ViewTask'>) {
-  const { task } = route.params;
-  const { completeTask } = useUserTasksStore();
+  const { task: taskParam } = route.params;
+  const { completeTask, userTasks } = useUserTasksStore();
+  const task: TaskType = userTasks.find((t: TaskType) => t.id === taskParam.id) as TaskType;
 
+  // Hooks
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <IconButton
-          icon="check"
+          icon="pencil"
           iconColor="#fff"
-          onPress={() => navigation.navigate('TasksMain', { screen: 'Tasks' })}
+          onPress={() => navigation.navigate('EditTask', { task })}
         />
       ),
     });
   }, [navigation]);
 
   // Methods
-  const handleCompleteTask = async () => {
-    try {
-      completeTask(task as TaskType);
-      navigation.navigate('HomeMain', { screen: 'HomeUpcoming' });
-    } catch (e) {
-      alert('error');
-    }
+  const handleCompleteTask = () => {
+    completeTask(task);
   };
 
   return (
@@ -59,27 +58,47 @@ export default function ViewTask({ route, navigation }: TasksTabScreenProps<'Vie
 
             <Card style={{ ...globalStyles.card, marginBottom: 32 }}>
               <View>
-                <Divider style={{ marginBottom: 16, marginHorizontal: -16 }} />
-
                 <View style={{ ...globalStyles.sideBySide, marginBottom: 16 }}>
-                  <Text style={globalStyles.label}>Every:</Text>
-                  <View style={{ flexDirection: 'row', flexBasis: 160 }}>
-                    <Text>{task.frequency}</Text>
+                  <Text style={{ ...globalStyles.label, flexBasis: 100 }}>Every:</Text>
+                  <View style={{ ...globalStyles.sideBySide, justifyContent: 'flex-start' }}>
+                    <Text>{task.frequency} </Text>
                     <Text>{task.interval}</Text>
                   </View>
                 </View>
 
-                <View>
-                  <Text>{task.notes}</Text>
+                <View style={{ ...globalStyles.sideBySide }}>
+                  <Text style={{ ...globalStyles.label, flexBasis: 100 }}>Notes:</Text>
+                  <View style={{ flexGrow: 1 }}>
+                    <Text style={{ ...globalStyles.text }}>{task.notes || '[none]'}</Text>
+                  </View>
                 </View>
               </View>
             </Card>
 
+            <Text style={{ ...globalStyles.h4 }}>History</Text>
+
+            <Card style={{ ...globalStyles.card, marginBottom: 32 }}>
+              {task.checkins.length === 0 && (
+                <Text style={{ ...globalStyles.text }}>No completed checkins...</Text>
+              )}
+              {task.checkins?.map((checkin: string) => (
+                <View
+                  key={checkin}
+                  style={{
+                    ...globalStyles.sideBySide,
+                    justifyContent: 'flex-start',
+                    marginBottom: 6,
+                  }}>
+                  <Ionicons name="md-checkmark-circle" size={32} color="green" />
+                  <Text style={{ ...globalStyles.label, marginLeft: 16 }}>
+                    {format(parseISO(checkin), 'M/dd/yy')} @ {format(parseISO(checkin), 'hh:mm a')}
+                  </Text>
+                </View>
+              ))}
+            </Card>
+
             <Button mode="contained" onPress={handleCompleteTask}>
-              Complete
-            </Button>
-            <Button mode="contained" onPress={() => navigation.navigate('EditTask', { task })}>
-              Edit
+              Complete Task
             </Button>
           </View>
         )}

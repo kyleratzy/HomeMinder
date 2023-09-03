@@ -10,15 +10,14 @@ import { TaskType } from '../types';
 export default function Tasks({ navigation }: TasksTabScreenProps<'Tasks'>) {
   // Hooks
   const { userTasks } = useUserTasksStore();
-  console.log({ userTasks });
 
   return (
     <View style={globalStyles.pageWrapper}>
       <ScrollView alwaysBounceVertical fadingEdgeLength={20}>
         <SafeAreaView>
           <View style={globalStyles.container}>
-            {userTasks.map((task: TaskType) => (
-              <View key={task.id} style={{ ...styles.taskWrapper }}>
+            {userTasks.map((task: TaskType, i) => (
+              <View key={i} style={{ ...styles.taskWrapper }}>
                 <Task task={task} />
               </View>
             ))}

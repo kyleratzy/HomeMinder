@@ -8,6 +8,20 @@ import { TasksTabScreenProps } from '../pages/navigation';
 import { colors, globalStyles } from '../styles';
 import { TaskType } from '../types';
 
+const CUSTOM_TASK: TaskType = {
+  id: 0,
+  name: 'Custom Task',
+  category: 'general',
+  image: {
+    uri: 'https://picsum.photos/100',
+  },
+  notes: '',
+  importance: 'medium',
+  frequency: '1',
+  interval: 'days',
+  checkins: [],
+};
+
 export default function SearchTasks({ navigation, route }: TasksTabScreenProps<'SearchTasks'>) {
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -37,8 +51,9 @@ export default function SearchTasks({ navigation, route }: TasksTabScreenProps<'
           <View style={globalStyles.container}>
             <View>
               {TASKS.filter(filter).map((task: TaskType) => (
-                <Task task={task} key={task.id} />
+                <Task task={task} key={task.id} editable />
               ))}
+              <Task task={CUSTOM_TASK} key={CUSTOM_TASK.id} />
             </View>
           </View>
         </SafeAreaView>

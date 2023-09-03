@@ -17,21 +17,31 @@ const globalStyles = StyleSheet.create({
     fontSize: 32,
     fontWeight: '300',
     marginBottom: 8,
+    color: colors.textLighter,
   },
   h2: {
     fontSize: 28,
     fontWeight: '300',
     marginBottom: 8,
+    color: colors.textLighter,
   },
   h3: {
     fontSize: 24,
     fontWeight: '300',
     marginBottom: 4,
+    color: colors.textLighter,
   },
   h4: {
     fontSize: 20,
     fontWeight: '300',
     marginBottom: 4,
+    color: colors.textLighter,
+  },
+  h5: {
+    fontSize: 18,
+    fontWeight: '300',
+    marginBottom: 4,
+    color: colors.textLighter,
   },
   pageWrapper: {
     paddingVertical: 16,
@@ -42,15 +52,16 @@ const globalStyles = StyleSheet.create({
   },
   card: {
     backgroundColor: '#fff',
-    paddingHorizontal: 16,
+    padding: 16,
+    // paddingHorizontal: 16,
   },
   border: {
     borderWidth: 1,
     borderColor: colors.textLighter,
   },
   sideBySide: {
-    width: '100%',
     flexDirection: 'row',
+    flexGrow: 1,
     justifyContent: 'space-between',
     alignItems: 'center',
   },
